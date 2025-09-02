@@ -4,7 +4,8 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private Transform cameraTransform; // Drag your camera here
-    [SerializeField] private float sensitivity = 5f;
+    private float mouseSensitivity = 5f;
+    private float moveSpeed = 5f;
 
     private InputAction lookAction;
     private InputAction moveAction;
@@ -21,12 +22,21 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         Rotate();
+        Movement();
+    }
+    private void Movement()
+    {
+        if (moveAction == null) return;
+
+        Vector2 input = moveAction.ReadValue<Vector2>();
+        Vector3 move = transform.right * input.x + transform.forward * input.y;
+        transform.position += move * moveSpeed * Time.deltaTime;
     }
     private void Rotate()
     {
         if (lookAction == null) return;
 
-        Vector2 mouseDelta = lookAction.ReadValue<Vector2>() * sensitivity * Time.deltaTime;
+        Vector2 mouseDelta = lookAction.ReadValue<Vector2>() * mouseSensitivity * Time.deltaTime;
 
         // Horizontal rotation (Y-axis)
         transform.Rotate(Vector3.up * mouseDelta.x);
