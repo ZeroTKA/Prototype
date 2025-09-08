@@ -8,12 +8,12 @@ public class Enemy : MonoBehaviour
 
     private void OnEnable()
     {
-        //StartCoroutine(DestroyMe());
+        StartCoroutine(DestroyMe());
     }
     IEnumerator DestroyMe()
     {
-        yield return new WaitForSeconds(5f);
-        GameObject.Destroy(gameObject);
+        yield return new WaitForSeconds(.1f);
+        PoolManager.instance.ReturnObjectToPool(gameObject);
     }
 }
 

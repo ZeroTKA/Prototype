@@ -25,14 +25,25 @@ public class PoolManager : MonoBehaviour
     private void Start()
     {
         // -- preload -- //
-        for(int i = 0; i < 15; i++)
+        for(int i = 0; i < 16; i++)
         {
             CreatePooledObject(preLoadEnemyPrefab, Vector3.zero, Quaternion.identity, false);
         }
     }
-    public void ReturnObjectToPool()
+    public void ReturnObjectToPool(GameObject obj)
     {
-
+        var poolable = obj.GetComponent<Poolable>();
+        string name = obj.name.ToLower();
+        obj.SetActive(false);
+        switch (name[..^7])
+        {
+            case "enemy":
+                enemyIndexStack.Push(poolable.PoolIndex);
+                break;
+            default:
+                enemyIndexStack.Push(1);
+                break;
+        }
     }
     public void CreatePooledObject(GameObject prefab, Vector3 position, Quaternion rotation, bool activate = true)
     {
