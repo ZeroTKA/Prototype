@@ -12,7 +12,7 @@ public class WaveManager : MonoBehaviour
     int counter = 0;
     void Start()
     {
-        StartCoroutine(SpawnWave(enemyPrefab, 5, .05f));
+        StartCoroutine(SpawnWave(enemyPrefab, 43, 3));
     }
 
     private Vector3 RandomPosition()
