@@ -1,8 +1,10 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+
 
     private void OnEnable()
     {
@@ -10,7 +12,8 @@ public class Enemy : MonoBehaviour
     }
     IEnumerator DestroyMe()
     {
-        yield return new WaitForSeconds(.5f);
+        yield return new WaitForSeconds(5f);
         GameObject.Destroy(gameObject);
     }
 }
+

@@ -12,7 +12,7 @@ public class WaveManager : MonoBehaviour
     int counter = 0;
     void Start()
     {
-        //StartCoroutine(SpawnWave(enemyPrefab, 1000, .005f,enemyPrefab, 1000,.5f));
+        StartCoroutine(SpawnWave(enemyPrefab, 5, .05f));
     }
 
     private Vector3 RandomPosition()
@@ -29,22 +29,8 @@ public class WaveManager : MonoBehaviour
         {
             yield return new WaitForSeconds(delayBetweenSpawns);
             counter++;
-            Instantiate(prefab, RandomPosition(), Quaternion.identity);
+            PoolManager.instance.GetObjectFromPool(prefab, RandomPosition(), Quaternion.identity);
             Debug.Log($"Enemy #: {counter}");
-        }
-    }
-    IEnumerator SpawnWave(GameObject prefab, int numberOfEnemies, float delayBetweenSpawns, 
-                          GameObject prefabTwo, int numberOfEnemiesTwo, float delayBetweenSpawns2)
-    {
-        for (int i = 0; i < numberOfEnemies; i++)
-        {
-            yield return new WaitForSeconds(delayBetweenSpawns);
-            Instantiate(prefab, RandomPosition(), Quaternion.identity);
-        }
-        for (int i = 0; i < numberOfEnemiesTwo; i++)
-        {
-            yield return new WaitForSeconds(delayBetweenSpawns2);
-            Instantiate(prefabTwo, RandomPosition(), Quaternion.identity);
         }
     }
 }
