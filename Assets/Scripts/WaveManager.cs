@@ -8,15 +8,11 @@ public class WaveManager : MonoBehaviour
     float xMaxRange = 12f;
     float zMinRange = -30f;
     float zMaxRange = -25f;
+
+    int counter = 0;
     void Start()
     {
-        StartCoroutine(SpawnWave(enemyPrefab, 10, .5f));
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        //StartCoroutine(SpawnWave(enemyPrefab, 1000, .005f,enemyPrefab, 1000,.5f));
     }
 
     private Vector3 RandomPosition()
@@ -32,7 +28,9 @@ public class WaveManager : MonoBehaviour
         for (int i = 0; i < numberOfEnemies; i++)
         {
             yield return new WaitForSeconds(delayBetweenSpawns);
+            counter++;
             Instantiate(prefab, RandomPosition(), Quaternion.identity);
+            Debug.Log($"Enemy #: {counter}");
         }
     }
     IEnumerator SpawnWave(GameObject prefab, int numberOfEnemies, float delayBetweenSpawns, 
