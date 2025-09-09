@@ -23,8 +23,10 @@ public class WaveManager : MonoBehaviour
         return new Vector3(x, 1, z);
     }
     
-    IEnumerator SpawnWave(GameObject prefab, int numberOfEnemies, float delayBetweenSpawns)
-    {        
+    IEnumerator SpawnWave(GameObject prefab, int numberOfEnemies, float delayBetweenSpawns, float delayBeforeStartingWave = 0)
+    {
+
+        if(delayBeforeStartingWave > 0) yield return new WaitForSeconds(delayBeforeStartingWave);
         for (int i = 0; i < numberOfEnemies; i++)
         {
             yield return new WaitForSeconds(delayBetweenSpawns);

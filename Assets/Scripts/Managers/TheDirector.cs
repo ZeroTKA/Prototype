@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class TheDirector : MonoBehaviour
 {
+
+    /// <summary>
+    /// should probably get; private set to all instances?.
+    /// </summary>
     public static TheDirector Instance { get; private set; }
     public GameState CurrentState { get; private set; }
     public event Action<GameState> OnGameStateChanged;
