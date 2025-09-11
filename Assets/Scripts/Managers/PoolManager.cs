@@ -63,11 +63,10 @@ public class PoolManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"Enemy prefab missing Poolable component at index {index}");
+            Debug.LogError($"Enemy prefab missing Poolable component at index {index}");
         }
 
     }
-
     public void GetObjectFromPool(GameObject prefab, Vector3 position, Quaternion rotation)
     {
         // -- if we can return, return -- //
