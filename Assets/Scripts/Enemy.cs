@@ -7,15 +7,23 @@ public class Enemy : MonoBehaviour
     [SerializeField] int maxHealth;
     public int Health { get; private set; }
 
+    bool isAtWall = false;
+
+    private float moveSpeed = 4f;
+
     private void OnEnable()
     {
         Reset();
-        StartCoroutine(DestroyMe());
+        StartCoroutine(WalkTowardWall());
     }
-    IEnumerator DestroyMe()
+    IEnumerator WalkTowardWall()
     {
-        yield return new WaitForSeconds(.1f);
-        PoolManager.instance.ReturnObjectToPool(gameObject);
+        while(!isAtWall)
+        {
+            gameObject.transform.position += new Vector3(0, 0, moveSpeed * Time.deltaTime);
+            yield return null;
+        }
+        // insert the coroutine of attacking.
     }
     private void Reset()
     {

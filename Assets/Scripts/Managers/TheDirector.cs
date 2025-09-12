@@ -21,7 +21,6 @@ public class TheDirector : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        Debug.Log($"We are here");
         SetGameState(GameState.MainMenu);
     }
 
