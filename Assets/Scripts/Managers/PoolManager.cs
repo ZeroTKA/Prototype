@@ -8,7 +8,7 @@ public class PoolManager : MonoBehaviour
     /// </summary>
 
 
-    public static PoolManager instance;
+    public static PoolManager Instance { get; private set; }
     [SerializeField] Transform miscPool; // permanent transform.
 
     // -- Enemy Prefab -- //
@@ -20,7 +20,7 @@ public class PoolManager : MonoBehaviour
     
     private void Awake()
     {
-        instance = this;
+        Instance = this;
     }
     private void Start()
     {

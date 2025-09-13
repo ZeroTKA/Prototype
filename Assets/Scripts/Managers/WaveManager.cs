@@ -12,7 +12,7 @@ public class WaveManager : MonoBehaviour
     int counter = 0;
     void Start()
     {
-        //StartCoroutine(SpawnWave(enemyPrefab, 10000, .005f));
+        StartCoroutine(SpawnWave(enemyPrefab, 10000, .005f));
     }
 
     private Vector3 RandomPosition()
@@ -31,7 +31,7 @@ public class WaveManager : MonoBehaviour
         {
             yield return new WaitForSeconds(delayBetweenSpawns);
             counter++;
-            PoolManager.instance.GetObjectFromPool(prefab, RandomPosition(), Quaternion.identity);
+            PoolManager.Instance.GetObjectFromPool(prefab, RandomPosition(), Quaternion.identity);
             Debug.Log($"Enemy #: {counter}");
         }
     }
