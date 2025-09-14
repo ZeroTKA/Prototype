@@ -32,7 +32,6 @@ public class WaveManager : MonoBehaviour
             yield return new WaitForSeconds(delayBetweenSpawns);
             counter++;
             PoolManager.Instance.GetObjectFromPool(prefab, RandomPosition(), Quaternion.identity);
-            Debug.Log($"Enemy #: {counter}");
         }
     }
 }
