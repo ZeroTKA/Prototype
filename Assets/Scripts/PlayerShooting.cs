@@ -6,6 +6,7 @@ public class PlayerShooting : MonoBehaviour
 {
     [SerializeField] Transform fpsCamera;
     private readonly int raycastDistance = 50;
+    
 
     // -- Gun Stats -- //
     private InputAction shootAction;
@@ -46,6 +47,7 @@ public class PlayerShooting : MonoBehaviour
             }
         }
     }
+    private int playerMask;
 
     private bool isMagazineEmpty = false;
     private bool areWeReloading = false;
@@ -57,11 +59,13 @@ public class PlayerShooting : MonoBehaviour
 
     private void Start()
     {
+        playerMask = ~LayerMask.GetMask("Ignore Raycast"); // player masked used to be ignored by raycast.
         var playerInput = GetComponent<PlayerInput>();
         shootAction = playerInput.actions["Attack"];
         reloadAction = playerInput.actions["Reload"];
         CurrentAmmo = maxAmmo;
-        SpareAmmo = 30;
+        SpareAmmo = 130;
+        UIManager.Instance.ChangeAmmoSituation(CurrentAmmo, maxAmmo);
     }
 
     void Update()
@@ -92,7 +96,7 @@ public class PlayerShooting : MonoBehaviour
         // -- Shoot the bullet -- //
         RaycastHit hit;
         Debug.DrawRay(fpsCamera.transform.position, fpsCamera.transform.forward * raycastDistance, Color.red, 1f); // debug only
-        if (Physics.Raycast(fpsCamera.transform.position, fpsCamera.transform.forward, out hit, raycastDistance)) 
+        if (Physics.Raycast(fpsCamera.transform.position, fpsCamera.transform.forward, out hit, raycastDistance,playerMask)) 
         {
             if (hit.collider.TryGetComponent<Enemy>(out Enemy enemy)) // could also do tags. 
             {
@@ -105,7 +109,10 @@ public class PlayerShooting : MonoBehaviour
         if (CurrentAmmo == 0) isMagazineEmpty = true;
         canWeShoot = false;
         StartCoroutine(ResetCanWeShootBool());
-        Debug.Log($"{CurrentAmmo} bullets left");
+        UIManager.Instance.ChangeAmmoSituation(CurrentAmmo, maxAmmo);
+
+
+
     }
     private void Reload()
     {
@@ -122,9 +129,7 @@ public class PlayerShooting : MonoBehaviour
     }
     IEnumerator Reloading()
     {
-        // -- Prep for Reload Logic -- //
         yield return new WaitForSeconds(reloadSpeed);
-        areWeReloading = false;
 
         // -- Reload Logic -- //
         //If we have more than enough or exactly enough.
@@ -139,7 +144,11 @@ public class PlayerShooting : MonoBehaviour
             CurrentAmmo += SpareAmmo;
             SpareAmmo = 0;
         }
+
+        // -- Deal with bools and shit -- //
+        areWeReloading = false;
         isMagazineEmpty = false;
+        UIManager.Instance.ChangeAmmoSituation(CurrentAmmo, maxAmmo); // don't forget this. Someone might be sad if you do.
     }
 
     private void OnEnable()
