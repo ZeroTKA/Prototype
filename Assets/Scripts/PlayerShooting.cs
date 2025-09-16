@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 public class PlayerShooting : MonoBehaviour
 {
     [SerializeField] Transform fpsCamera;
-    private readonly int raycastDistance = 8;
+    private readonly int raycastDistance = 50;
 
     // -- Gun Stats -- //
     private InputAction shootAction;
@@ -29,20 +29,20 @@ public class PlayerShooting : MonoBehaviour
             }
         }
     }
-    private int _carriedAmmo; // Never use this anywhere except Carried Ammo
-    private int CarriedAmmo
+    private int _spareAmmo; // Never use this anywhere except Carried Ammo
+    private int SpareAmmo
     {
-        get => _carriedAmmo;
+        get => _spareAmmo;
         set
         {
             if (value < 0)
             {
-                CarriedAmmo = 0;
+                SpareAmmo = 0;
                 Debug.LogError($"{value} is trying to be set for _carriedAmmo. This must be a positive number");
             }
             else
             {
-                _carriedAmmo = value;
+                _spareAmmo = value;
             }
         }
     }
@@ -61,7 +61,7 @@ public class PlayerShooting : MonoBehaviour
         shootAction = playerInput.actions["Attack"];
         reloadAction = playerInput.actions["Reload"];
         CurrentAmmo = maxAmmo;
-        CarriedAmmo = 30;
+        SpareAmmo = 30;
     }
 
     void Update()
@@ -80,7 +80,7 @@ public class PlayerShooting : MonoBehaviour
         }
 
         // -- Can We Reload? -- //
-        if (reloadAction.triggered && CurrentAmmo < maxAmmo && !areWeReloading && CarriedAmmo > 0)
+        if (reloadAction.triggered && CurrentAmmo < maxAmmo && !areWeReloading && SpareAmmo > 0)
         {
             Reload();
         }
@@ -128,17 +128,18 @@ public class PlayerShooting : MonoBehaviour
 
         // -- Reload Logic -- //
         //If we have more than enough or exactly enough.
-        if (CarriedAmmo >= maxAmmo - CurrentAmmo)
+        if (SpareAmmo >= maxAmmo - CurrentAmmo)
         {
-            CarriedAmmo -= maxAmmo - CurrentAmmo;
+            SpareAmmo -= maxAmmo - CurrentAmmo;
             CurrentAmmo = maxAmmo;            
         }
         //if we don't have enough to fill
         else
         {
-            CurrentAmmo += CarriedAmmo;
-            CarriedAmmo = 0;
+            CurrentAmmo += SpareAmmo;
+            SpareAmmo = 0;
         }
+        isMagazineEmpty = false;
     }
 
     private void OnEnable()
