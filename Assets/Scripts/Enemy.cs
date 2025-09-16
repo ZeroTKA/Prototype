@@ -17,6 +17,25 @@ public class Enemy : MonoBehaviour
         Reset();
         StartCoroutine(WalkTowardWall());
     }
+
+    // -- Main Methods -- //
+    private void Reset()
+    {
+        Health = maxHealth;
+        isAtWall = false;
+    }
+    public void TakeDamage(int damageAmount)
+    {
+        // -- Taking Damage Logic -- //
+        if (damageAmount < 0)
+        {
+            Debug.LogError($"{damageAmount} is trying to give damage to {gameObject.name}. damage must be positive");
+        }
+        else if (Health - damageAmount > 0) Health -= damageAmount;
+        else PoolManager.Instance.ReturnObjectToPool(gameObject);
+    }
+
+    // -- Coroutines -- //
     IEnumerator WalkTowardWall()
     {
         while(!isAtWall)
@@ -29,14 +48,10 @@ public class Enemy : MonoBehaviour
             }
             yield return null;
         }
-        StartCoroutine(Death());
+        //StartCoroutine(Death());
         // insert the coroutine of attacking.
     }
-    private void Reset()
-    {
-        Health = maxHealth;
-        isAtWall = false;
-    }
+    
     IEnumerator Death()
     {
         yield return new WaitForSeconds(4);

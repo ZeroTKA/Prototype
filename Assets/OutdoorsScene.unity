@@ -724,6 +724,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ae25805ef2b6bf45930756e8fdb3776, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShooting
+  fpsCamera: {fileID: 1823688467}
   maxAmmo: 20
 --- !u!1 &810033953
 GameObject:

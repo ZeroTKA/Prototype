@@ -4,6 +4,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerShooting : MonoBehaviour
 {
+    [SerializeField] Transform fpsCamera;
+    private readonly int raycastDistance = 8;
+
+    // -- Gun Stats -- //
     private InputAction shootAction;
     private InputAction reloadAction;
 
@@ -25,7 +29,7 @@ public class PlayerShooting : MonoBehaviour
             }
         }
     }
-    private int _carriedAmmo;
+    private int _carriedAmmo; // Never use this anywhere except Carried Ammo
     private int CarriedAmmo
     {
         get => _carriedAmmo;
@@ -48,6 +52,7 @@ public class PlayerShooting : MonoBehaviour
     private bool canWeShoot = true;
     private readonly float shootSpeed = 1;
     private readonly float reloadSpeed = 1;
+
     
 
     private void Start()
@@ -61,6 +66,7 @@ public class PlayerShooting : MonoBehaviour
 
     void Update()
     {
+        // -- Can We Shoot? -- //
         if (shootAction.triggered && !areWeReloading && canWeShoot)
         {
             if(!isMagazineEmpty)
@@ -72,14 +78,29 @@ public class PlayerShooting : MonoBehaviour
                 // play dud sound
             }
         }
+
+        // -- Can We Reload? -- //
         if (reloadAction.triggered && CurrentAmmo < maxAmmo && !areWeReloading && CarriedAmmo > 0)
         {
             Reload();
         }
     }
 
+    // -- Methods -- //
     private void Shoot()
     {
+        // -- Shoot the bullet -- //
+        RaycastHit hit;
+        Debug.DrawRay(fpsCamera.transform.position, fpsCamera.transform.forward * raycastDistance, Color.red, 1f); // debug only
+        if (Physics.Raycast(fpsCamera.transform.position, fpsCamera.transform.forward, out hit, raycastDistance)) 
+        {
+            if (hit.collider.TryGetComponent<Enemy>(out Enemy enemy)) // could also do tags. 
+            {
+                enemy.TakeDamage(10);
+            }
+        }
+
+        // -- Clean up after shot -- //
         CurrentAmmo -= 1;
         if (CurrentAmmo == 0) isMagazineEmpty = true;
         canWeShoot = false;
@@ -93,6 +114,7 @@ public class PlayerShooting : MonoBehaviour
         StartCoroutine(Reloading()); // this contains all the logic because we want things to change at the END.
     }
 
+    // -- Coroutines -- //
     IEnumerator ResetCanWeShootBool()
     {
         yield return new WaitForSeconds(shootSpeed);
@@ -100,9 +122,11 @@ public class PlayerShooting : MonoBehaviour
     }
     IEnumerator Reloading()
     {
+        // -- Prep for Reload Logic -- //
         yield return new WaitForSeconds(reloadSpeed);
         areWeReloading = false;
 
+        // -- Reload Logic -- //
         //If we have more than enough or exactly enough.
         if (CarriedAmmo >= maxAmmo - CurrentAmmo)
         {
@@ -115,5 +139,16 @@ public class PlayerShooting : MonoBehaviour
             CurrentAmmo += CarriedAmmo;
             CarriedAmmo = 0;
         }
+    }
+
+    private void OnEnable()
+    {
+        shootAction?.Enable();
+        reloadAction?.Enable();
+    }
+    private void OnDisable()
+    {
+        shootAction?.Disable();
+        reloadAction?.Disable();        
     }
 }
