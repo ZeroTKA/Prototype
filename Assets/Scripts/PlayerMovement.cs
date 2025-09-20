@@ -25,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     private InputAction lookAction;
     private InputAction moveAction;
     private InputAction jumpAction;
+    private InputAction escAction;
 
     private void Start()
     {
@@ -32,11 +33,20 @@ public class PlayerMovement : MonoBehaviour
         lookAction = playerInput.actions["Look"];
         moveAction = playerInput.actions["Move"];
         jumpAction = playerInput.actions["Jump"];
+        escAction = playerInput.actions["Pause"];
         Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
     {
+        // -- UI Button Pushes -- //
+        if(escAction.triggered)
+        {
+            UIManager.Instance.TogglePauseMenu();
+        }
+
+
+        // -- Player Button Pushes -- //
         Rotate();
         Movement();
         Jump();
