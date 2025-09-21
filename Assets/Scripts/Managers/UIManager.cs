@@ -17,7 +17,7 @@ public class UIManager : MonoBehaviour
     public void TogglePauseMenu()
     {
         pauseCanvas.SetActive(!pauseCanvas.activeSelf);
-        if(Time.timeScale > 0)
+        if (Time.timeScale > 0)
         {
             Time.timeScale = 0;
             Cursor.lockState = CursorLockMode.Confined;
@@ -27,5 +27,13 @@ public class UIManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Time.timeScale = 1f;
         }
+    }
+    public void ExitGame()
+    {
+        #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 }
