@@ -1,10 +1,13 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI u_AmmoSituation;
     [SerializeField] GameObject pauseCanvas;
+    [SerializeField] Image reloadIcon;
     public static UIManager Instance;
     private void Awake()
     {
@@ -35,5 +38,22 @@ public class UIManager : MonoBehaviour
         #else
             Application.Quit();
         #endif
+    }
+    public void ReloadIcon(float reloadTime)
+    {
+        StartCoroutine(ReloadIconCoroutine(reloadTime));
+    }
+
+    private IEnumerator ReloadIconCoroutine (float reloadTime)
+    {
+        float elapsed = 0f;
+        reloadIcon.fillAmount = 0f;
+        while (elapsed < reloadTime)
+        {
+            elapsed += Time.deltaTime;
+            reloadIcon.fillAmount = Mathf.Clamp01(elapsed / reloadTime);
+            yield return null;
+        }
+        reloadIcon.fillAmount = 0f; 
     }
 }

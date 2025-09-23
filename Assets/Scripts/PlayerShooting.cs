@@ -116,7 +116,8 @@ public class PlayerShooting : MonoBehaviour
     }
     private void Reload()
     {
-        Debug.Log("Reloading");
+
+        UIManager.Instance.ReloadIcon(reloadSpeed);
         areWeReloading = true;
         StartCoroutine(Reloading()); // this contains all the logic because we want things to change at the END.
     }

@@ -209,7 +209,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &38249966
 Transform:
   m_ObjectHideFlags: 0
@@ -1699,8 +1699,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1364928282}
-  - {fileID: 16866732}
   - {fileID: 49167157}
+  - {fileID: 16866732}
   m_Father: {fileID: 2141691121}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2437,6 +2437,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
   u_AmmoSituation: {fileID: 1364928283}
   pauseCanvas: {fileID: 215995224}
+  reloadIcon: {fileID: 49167158}
 --- !u!1 &1080610233
 GameObject:
   m_ObjectHideFlags: 0
@@ -4379,7 +4380,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2141691121
 Transform:
   m_ObjectHideFlags: 0
