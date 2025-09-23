@@ -58,7 +58,6 @@ public class Enemy : MonoBehaviour
         {
             yield return new WaitForSeconds(3);
             WallThings.instance.ChangeHealth(-3);
-            Debug.Log("ATTACKED");
         }
 
     }

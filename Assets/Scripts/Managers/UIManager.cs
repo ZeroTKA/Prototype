@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI u_wallHealthSituation;
     [SerializeField] GameObject pauseCanvas;
     [SerializeField] Image reloadIcon;
+    [SerializeField] Image greebHealthBar;
     public static UIManager Instance;
     private void Awake()
     {
@@ -47,6 +48,7 @@ public class UIManager : MonoBehaviour
     public void ChangeWallHealth(int health, int maxHealth)
     {
         u_wallHealthSituation.text = $"{health} / {maxHealth}";
+        greebHealthBar.fillAmount = (float)health / maxHealth;
     }
     private IEnumerator ReloadIconCoroutine (float reloadTime)
     {

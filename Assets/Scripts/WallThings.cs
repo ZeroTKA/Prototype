@@ -8,11 +8,8 @@ public class WallThings : MonoBehaviour
     public event Action WallIsGone;
     public static WallThings instance;
 
-
-    void Start()
+    private void Awake()
     {
-        Health = maxHealth;
-        UIManager.Instance.ChangeWallHealth(Health, maxHealth);
         if (instance == null)
         {
             instance = this;
@@ -21,7 +18,13 @@ public class WallThings : MonoBehaviour
         {
             Destroy(gameObject);
         }
-            Health = maxHealth;
+    }
+
+    void Start()
+    {
+        Health = maxHealth;
+        UIManager.Instance.ChangeWallHealth(Health, maxHealth);
+
     }
 
     public void ChangeHealth(int healthChangeAmount)
