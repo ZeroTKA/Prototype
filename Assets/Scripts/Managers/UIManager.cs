@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI u_AmmoSituation;
+    [SerializeField] TextMeshProUGUI u_ammoSituation;
+    [SerializeField] TextMeshProUGUI u_wallHealthSituation;
     [SerializeField] GameObject pauseCanvas;
     [SerializeField] Image reloadIcon;
     public static UIManager Instance;
@@ -15,7 +16,7 @@ public class UIManager : MonoBehaviour
     }
     public void ChangeAmmoSituation(int currentAmmo, int maxAmmo)
     {
-        u_AmmoSituation.text = $"{currentAmmo} / {maxAmmo}";
+        u_ammoSituation.text = $"{currentAmmo} / {maxAmmo}";
     }
     public void TogglePauseMenu()
     {
@@ -43,7 +44,10 @@ public class UIManager : MonoBehaviour
     {
         StartCoroutine(ReloadIconCoroutine(reloadTime));
     }
-
+    public void ChangeWallHealth(int health, int maxHealth)
+    {
+        u_wallHealthSituation.text = $"{health} / {maxHealth}";
+    }
     private IEnumerator ReloadIconCoroutine (float reloadTime)
     {
         float elapsed = 0f;

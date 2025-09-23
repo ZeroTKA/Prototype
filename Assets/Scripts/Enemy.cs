@@ -23,6 +23,7 @@ public class Enemy : MonoBehaviour
     {
         Health = maxHealth;
         isAtWall = false;
+        WallThings.instance.WallIsGone += WallIsDestroyed;
     }
     public void TakeDamage(int damageAmount)
     {
@@ -33,6 +34,7 @@ public class Enemy : MonoBehaviour
         }
         else if (Health - damageAmount > 0) Health -= damageAmount;
         else PoolManager.Instance.ReturnObjectToPool(gameObject);
+        WallThings.instance.WallIsGone -= WallIsDestroyed;
     }
 
     // -- Coroutines -- //
@@ -48,8 +50,21 @@ public class Enemy : MonoBehaviour
             }
             yield return null;
         }
-        //StartCoroutine(Death());
-        // insert the coroutine of attacking.
+        StartCoroutine(Attack());
+    }
+    IEnumerator Attack()
+    {
+        while(true)
+        {
+            yield return new WaitForSeconds(3);
+            WallThings.instance.ChangeHealth(-3);
+            Debug.Log("ATTACKED");
+        }
+
+    }
+    private void WallIsDestroyed()
+    {
+        StopAllCoroutines();
     }
     
     IEnumerator Death()

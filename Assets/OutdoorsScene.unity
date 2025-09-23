@@ -2435,7 +2435,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 071b1fd309836664fbb0e775d15b2bf9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
-  u_AmmoSituation: {fileID: 1364928283}
+  u_ammoSituation: {fileID: 1364928283}
+  u_wallHealthSituation: {fileID: 928922347}
   pauseCanvas: {fileID: 215995224}
   reloadIcon: {fileID: 49167158}
 --- !u!1 &1080610233
@@ -4814,6 +4815,7 @@ GameObject:
   - component: {fileID: 9194065311370192975}
   - component: {fileID: 9194065311370192974}
   - component: {fileID: 9194065311370192973}
+  - component: {fileID: 9194065311370192976}
   m_Layer: 0
   m_Name: Walls
   m_TagString: Untagged
@@ -5016,12 +5018,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 100845223856468464}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.50000006, y: 0.49999997, z: 0.49999997, w: 0.50000006}
-  m_LocalPosition: {x: -0.00842905, y: 3.5029662, z: -1.0610207}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.0051394706, y: -0.000012931823, z: 0.019338619}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7948872203993327399}
+  m_Father: {fileID: 8673562834990990470}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &7948872203993327399
 Transform:
@@ -5042,7 +5044,6 @@ Transform:
   - {fileID: 1540146556638707738}
   - {fileID: 7594784391816544775}
   - {fileID: 6329478741891183892}
-  - {fileID: 7865274078692615227}
   - {fileID: 8673562834990990470}
   m_Father: {fileID: 955350958}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5324,7 +5325,8 @@ Transform:
   m_LocalPosition: {x: -0.009722352, y: 1.5691043, z: -0.5470738}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7865274078692615227}
   m_Father: {fileID: 7948872203993327399}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &9194065311370192972
@@ -5398,6 +5400,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.015929874, y: 0.05, z: 0.0325}
   m_Center: {x: 0, y: -0.036, z: 0}
+--- !u!114 &9194065311370192976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6357949535828361122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51a50b193aef1b240b25afdd347b41c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WallThings
+  maxHealth: 21
 --- !u!1 &9209294961644308459
 GameObject:
   m_ObjectHideFlags: 0
