@@ -8,6 +8,8 @@ public class WallThings : MonoBehaviour
     public event Action WallIsGone;
     public static WallThings instance;
 
+    float timer = 0;
+
     private void Awake()
     {
         if (instance == null)
@@ -26,6 +28,10 @@ public class WallThings : MonoBehaviour
         UIManager.Instance.ChangeWallHealth(Health, maxHealth);
 
     }
+    private void Update()
+    {
+        timer += Time.deltaTime;
+    }
 
     public void ChangeHealth(int healthChangeAmount)
     {
@@ -35,7 +41,11 @@ public class WallThings : MonoBehaviour
             WallIsGone?.Invoke();
             TheDirector.Instance.SetGameState(TheDirector.GameState.GameOver);
         }
-        UIManager.Instance.ChangeWallHealth(Health, maxHealth);
+        if (timer >= .1f)
+        {
+            UIManager.Instance.ChangeWallHealth(Health, maxHealth);
+            timer = 0;
+        }
     }
 
 }
