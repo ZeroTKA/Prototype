@@ -14,7 +14,7 @@ public class WaveManager : MonoBehaviour
     int counter = 0;
     void Start()
     {
-        StartCoroutine(SpawnWave(enemyPrefab, 10000, .01f));
+        StartCoroutine(SpawnWave(enemyPrefab, 2000, .01f));
     }
 
     // -- Supplemental Methods -- //

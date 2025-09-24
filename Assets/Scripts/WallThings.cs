@@ -41,7 +41,7 @@ public class WallThings : MonoBehaviour
             WallIsGone?.Invoke();
             TheDirector.Instance.SetGameState(TheDirector.GameState.GameOver);
         }
-        if (timer >= .1f)
+        if (timer >= .2f)
         {
             UIManager.Instance.ChangeWallHealth(Health, maxHealth);
             timer = 0;
