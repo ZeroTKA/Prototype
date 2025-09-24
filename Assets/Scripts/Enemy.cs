@@ -57,7 +57,7 @@ public class Enemy : MonoBehaviour
         while(true)
         {
             yield return new WaitForSeconds(3);
-            WallThings.instance.AddToPendingDamage(-3);
+            WallThings.instance.ChangeHealth(-3);
         }
 
     }

@@ -15,7 +15,6 @@ public class UIManager : MonoBehaviour
     {
         Instance = this;
     }
-
     public void ChangeAmmoSituation(int currentAmmo, int maxAmmo)
     {
         u_ammoSituation.text = $"{currentAmmo} / {maxAmmo}";
@@ -48,7 +47,7 @@ public class UIManager : MonoBehaviour
     }
     public void ChangeWallHealth(int health, int maxHealth)
     {
-        u_wallHealthSituation.SetText("{0} / {1}", health, maxHealth); // apparently SetText is faster than .text when having multiple things.
+        u_wallHealthSituation.text = $"{health} / {maxHealth}";
         greebHealthBar.fillAmount = (float)health / maxHealth;
     }
     private IEnumerator ReloadIconCoroutine (float reloadTime)
