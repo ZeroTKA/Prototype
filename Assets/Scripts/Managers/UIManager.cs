@@ -47,7 +47,7 @@ public class UIManager : MonoBehaviour
     }
     public void ChangeWallHealth(int health, int maxHealth)
     {
-        u_wallHealthSituation.text = $"{health} / {maxHealth}";
+        u_wallHealthSituation.SetText("{0} / {1}", health, maxHealth); //settext is faster than .text when there's stuff going on.
         greebHealthBar.fillAmount = (float)health / maxHealth;
     }
     private IEnumerator ReloadIconCoroutine (float reloadTime)

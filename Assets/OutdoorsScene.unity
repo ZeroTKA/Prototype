@@ -5413,7 +5413,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51a50b193aef1b240b25afdd347b41c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WallThings
-  maxHealth: 50000
+  maxHealth: 500000
 --- !u!1 &9209294961644308459
 GameObject:
   m_ObjectHideFlags: 0
