@@ -38,4 +38,21 @@ public class WaveManager : MonoBehaviour
             PoolManager.Instance.GetObjectFromPool(prefab, RandomPosition(), Quaternion.identity);
         }
     }
+
+    private void Restart(TheDirector.GameState state)
+    {
+        if (state == TheDirector.GameState.Restart)
+        {
+            Debug.Log("WaveManager Restart");
+            // rest everything relating to the pool.
+        }
+    }
+    private void OnEnable()
+    {
+        TheDirector.Instance.OnGameStateChanged += Restart;
+    }
+    private void OnDisable()
+    {
+        TheDirector.Instance.OnGameStateChanged -= Restart;
+    }
 }

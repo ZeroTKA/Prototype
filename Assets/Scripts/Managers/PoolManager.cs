@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Android;
 
 public class PoolManager : MonoBehaviour
 {
@@ -99,4 +100,22 @@ public class PoolManager : MonoBehaviour
                 break;
         }
     }
+    private void Restart(TheDirector.GameState state)
+    {
+        if(state == TheDirector.GameState.Restart)
+        {
+            Debug.Log("Pool Manager Restart");
+            // rest everything relating to the pool.
+        }
+    }
+
+    private void OnEnable()
+    {
+        TheDirector.Instance.OnGameStateChanged += Restart;
+    }
+    private void OnDisable()
+    {
+        TheDirector.Instance.OnGameStateChanged -= Restart;
+    }
+    
 }

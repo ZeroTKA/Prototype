@@ -29,9 +29,14 @@ public class TheDirector : MonoBehaviour
         MainMenu,
         Wave,
         Shop,
-        GameOver
+        GameOver,
+        Restart
     }
-
+    public void Restart()
+    {
+        Debug.Log("The Director Restart");
+        SetGameState(GameState.Restart);
+    }
     public void SetGameState(GameState newState)
     {
         Debug.Log($"{CurrentState} to {newState}");

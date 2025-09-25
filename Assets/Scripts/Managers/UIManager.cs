@@ -62,4 +62,20 @@ public class UIManager : MonoBehaviour
         }
         reloadIcon.fillAmount = 0f; 
     }
+    private void Restart(TheDirector.GameState state)
+    {
+        if (state == TheDirector.GameState.Restart)
+        {
+            Debug.Log("UIManager Restart");
+            // rest everything relating to the pool.
+        }
+    }
+    private void OnEnable()
+    {
+        TheDirector.Instance.OnGameStateChanged += Restart;
+    }
+    private void OnDisable()
+    {
+        TheDirector.Instance.OnGameStateChanged -= Restart;
+    }
 }
