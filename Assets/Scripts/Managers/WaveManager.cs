@@ -6,10 +6,10 @@ public class WaveManager : MonoBehaviour
     [SerializeField]GameObject enemyPrefab;    
 
     // -- Spawn area 1 -- //
-    float xMinRange = 1f;
-    float xMaxRange = 12f;
-    float zMinRange = -30f;
-    float zMaxRange = -25f;
+    readonly float xMinRange = 1f;
+    readonly float xMaxRange = 12f;
+    readonly float zMinRange = -30f;
+    readonly float zMaxRange = -25f;
 
     int counter = 0;
     void Start()

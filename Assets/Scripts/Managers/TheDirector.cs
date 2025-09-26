@@ -13,14 +13,9 @@ public class TheDirector : MonoBehaviour
 
     void Awake()
     {
-        if(Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        if(Instance == null) { Instance = this; }      
+        else { Debug.LogError("Multiple Directors"); Destroy(gameObject); }
+
         SetGameState(GameState.MainMenu);
     }
 
@@ -34,7 +29,6 @@ public class TheDirector : MonoBehaviour
     }
     public void Restart()
     {
-        Debug.Log("The Director Restart");
         SetGameState(GameState.Restart);
     }
     public void SetGameState(GameState newState)

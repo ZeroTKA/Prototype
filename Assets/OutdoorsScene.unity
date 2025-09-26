@@ -2620,6 +2620,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe8cca6c607c29c40a801644305ac420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PoolManager
+  preloadEnemyPoolCount: 16
   miscPool: {fileID: 810033954}
   enemyParentPool: {fileID: 449567896}
   preLoadEnemyPrefab: {fileID: 2184366968305249912, guid: f0e5ccf1fbb55d146934c34807a247eb, type: 3}
