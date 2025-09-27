@@ -5,19 +5,90 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI u_ammoSituation;
+    // -- Healthbar -- //
     [SerializeField] TextMeshProUGUI u_wallHealthSituation;
-    [SerializeField] GameObject pauseCanvas;
+    [SerializeField] Image greemHealthBar;
+    private readonly string HealthbarFormat = "{0} / {1}"; // Apparently you can save the format and put it in SetText. Weird optimization
+
+    // -- Gun Related Things -- //
+    [SerializeField] TextMeshProUGUI u_ammoSituation;
     [SerializeField] Image reloadIcon;
-    [SerializeField] Image greebHealthBar;
+
+    // -- Menus -- //
+    [SerializeField] GameObject pauseCanvas;    
+    
     public static UIManager Instance;
+
+    // -- Specialty Methods -- //
     private void Awake()
     {
-        Instance = this;
+        if (Instance == null) { Instance = this; }
+        else { Debug.LogError("Multiple UIManagers"); Destroy(gameObject); }
     }
+    public void Start()
+    {
+        if (TheDirector.Instance == null) { Debug.LogError("TheDirector Instance not available"); }
+        else { TheDirector.Instance.OnGameStateChanged += Restart; }
+    }
+    private void OnDisable()
+    {
+        TheDirector.Instance.OnGameStateChanged -= Restart;
+    }
+
+    // -- Healthbar -- //
+    public void ChangeWallHealth(int health, int maxHealth)
+    {
+
+        float newHealth = health / maxHealth;
+        if (newHealth < 0 || newHealth > 1)
+        {
+            Debug.LogError($"[UIManager] {health} / {maxHealth} is not between 0 and 1. NOT okay.");
+        }
+        else
+        {
+            greemHealthBar.fillAmount = newHealth;
+            u_wallHealthSituation.SetText(HealthbarFormat, health, maxHealth); //settext is faster than .text when there's stuff going on.}
+        }
+    }
+
+    // -- Gun Related Methods -- //
     public void ChangeAmmoSituation(int currentAmmo, int maxAmmo)
     {
-        u_ammoSituation.text = $"{currentAmmo} / {maxAmmo}";
+        u_ammoSituation.SetText(HealthbarFormat, currentAmmo, maxAmmo); // 'x / x' is the format
+    }
+    public void ReloadIcon(float reloadTime)
+    {
+        StartCoroutine(ReloadIconCoroutine(reloadTime));
+    }
+    private IEnumerator ReloadIconCoroutine(float reloadTime)
+    {
+        float elapsed = 0f;
+        reloadIcon.fillAmount = 0f; // this can probably be removed??.
+        while (elapsed < reloadTime)
+        {
+            elapsed += Time.deltaTime;
+            reloadIcon.fillAmount = Mathf.Clamp01(elapsed / reloadTime);
+            yield return null;
+        }
+        reloadIcon.fillAmount = 0f; // this one is important because when we are "full" we want to get rid of the icon"
+    }
+
+    // -- Menu Methods -- //
+    public void ExitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
+    }
+    private void Restart(TheDirector.GameState state)
+    {
+        if (state == TheDirector.GameState.Restart)
+        {
+            Debug.Log("UIManager Restart");
+            // rest everything relating to the pool.
+        }
     }
     public void TogglePauseMenu()
     {
@@ -33,49 +104,8 @@ public class UIManager : MonoBehaviour
             Time.timeScale = 1f;
         }
     }
-    public void ExitGame()
-    {
-        #if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-        #else
-            Application.Quit();
-        #endif
-    }
-    public void ReloadIcon(float reloadTime)
-    {
-        StartCoroutine(ReloadIconCoroutine(reloadTime));
-    }
-    public void ChangeWallHealth(int health, int maxHealth)
-    {
-        u_wallHealthSituation.SetText("{0} / {1}", health, maxHealth); //settext is faster than .text when there's stuff going on.
-        greebHealthBar.fillAmount = (float)health / maxHealth;
-    }
-    private IEnumerator ReloadIconCoroutine (float reloadTime)
-    {
-        float elapsed = 0f;
-        reloadIcon.fillAmount = 0f;
-        while (elapsed < reloadTime)
-        {
-            elapsed += Time.deltaTime;
-            reloadIcon.fillAmount = Mathf.Clamp01(elapsed / reloadTime);
-            yield return null;
-        }
-        reloadIcon.fillAmount = 0f; 
-    }
-    private void Restart(TheDirector.GameState state)
-    {
-        if (state == TheDirector.GameState.Restart)
-        {
-            Debug.Log("UIManager Restart");
-            // rest everything relating to the pool.
-        }
-    }
-    private void OnEnable()
-    {
-        TheDirector.Instance.OnGameStateChanged += Restart;
-    }
-    private void OnDisable()
-    {
-        TheDirector.Instance.OnGameStateChanged -= Restart;
-    }
+
+
+
+
 }
