@@ -16,9 +16,7 @@ public class UIManager : MonoBehaviour
 
     // -- Menus -- //
     [SerializeField] GameObject pauseMenuObject;
-    [SerializeField] private Animator fadeAnimator;
-    private int fadeToBlackID;
-    private int fadeBlackToClearID;
+    [SerializeField] private UIFadeScript fader;
     
     public static UIManager Instance;
 
@@ -26,10 +24,7 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         if (Instance == null) { Instance = this; }
-        else { Debug.LogError("Multiple UIManagers"); Destroy(gameObject); }
-        // -- Animator things -- //
-        fadeToBlackID = Animator.StringToHash("FadeToBlack");
-        fadeBlackToClearID = Animator.StringToHash("FadeBlackToClear");
+        else { Debug.LogError("Multiple UIManagers"); Destroy(gameObject); }   
     }
     public void Start()
     {
@@ -95,18 +90,10 @@ public class UIManager : MonoBehaviour
             if(pauseMenuObject.activeSelf)
             {
                 TogglePauseMenu();
-                FadeToBlack(); // Game --> Black
+                fader.FadeToBlack();
             }
             // rest everything relating to the UI menu.
         }
-    }
-    public void FadeToBlack() // Game --> Black
-    {
-        fadeAnimator.SetTrigger(fadeToBlackID);
-    }
-    public void FadeBlackToClear()
-    {
-        fadeAnimator.SetTrigger(fadeBlackToClearID);
     }
     public void TogglePauseMenu()
     {
