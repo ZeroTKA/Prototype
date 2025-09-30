@@ -15,7 +15,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] Image reloadIcon;
 
     // -- Menus -- //
-    [SerializeField] GameObject pauseCanvas;    
+    [SerializeField] GameObject pauseMenuObject;    
     
     public static UIManager Instance;
 
@@ -86,13 +86,17 @@ public class UIManager : MonoBehaviour
     {
         if (state == TheDirector.GameState.Restart)
         {
-            Debug.Log("UIManager Restart");
-            // rest everything relating to the pool.
+            // Is this what I actually want?  Maybe countdown? Or screen to black?
+            if(pauseMenuObject.activeSelf)
+            {
+                TogglePauseMenu();
+            }
+            // rest everything relating to the UI menu.
         }
     }
     public void TogglePauseMenu()
     {
-        pauseCanvas.SetActive(!pauseCanvas.activeSelf);
+        pauseMenuObject.SetActive(!pauseMenuObject.activeSelf);
         if (Time.timeScale > 0)
         {
             Time.timeScale = 0;
@@ -104,8 +108,4 @@ public class UIManager : MonoBehaviour
             Time.timeScale = 1f;
         }
     }
-
-
-
-
 }
