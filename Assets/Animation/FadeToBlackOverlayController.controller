@@ -9,7 +9,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: FadeIn
+    m_ConditionEvent: FadeToBlack
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -1351512350493903257}
@@ -32,7 +32,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: FadeOut
+  m_Name: FadeBlackToClear
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -138,7 +138,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: FadeOut
+    m_ConditionEvent: FadeBlackToClear
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -7989611545356406049}
@@ -161,7 +161,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: FadeIn
+  m_Name: FadeToBlack
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -190,13 +190,13 @@ AnimatorController:
   m_Name: FadeToBlackOverlayController
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: FadeIn
+  - m_Name: FadeToBlack
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: FadeOut
+  - m_Name: FadeBlackToClear
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0

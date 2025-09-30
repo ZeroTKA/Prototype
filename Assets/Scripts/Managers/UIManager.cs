@@ -15,7 +15,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] Image reloadIcon;
 
     // -- Menus -- //
-    [SerializeField] GameObject pauseMenuObject;    
+    [SerializeField] GameObject pauseMenuObject;
+    [SerializeField] private Animator fadeAnimator;
+    private int fadeToBlackID;
+    private int fadeBlackToClearID;
     
     public static UIManager Instance;
 
@@ -24,6 +27,9 @@ public class UIManager : MonoBehaviour
     {
         if (Instance == null) { Instance = this; }
         else { Debug.LogError("Multiple UIManagers"); Destroy(gameObject); }
+        // -- Animator things -- //
+        fadeToBlackID = Animator.StringToHash("FadeToBlack");
+        fadeBlackToClearID = Animator.StringToHash("FadeBlackToClear");
     }
     public void Start()
     {
@@ -38,13 +44,7 @@ public class UIManager : MonoBehaviour
     // -- Healthbar -- //
     public void ChangeWallHealth(int health, int maxHealth)
     {
-
         float newHealth = (float)health / maxHealth;
-        Debug.Log($"[UI Manager] health: {health}" +
-            $"maxHealth: {maxHealth}" +
-            $"newHealth: {newHealth}");
-        
-
         if (newHealth < 0 || newHealth > 1)
         {
             Debug.LogError($"[UIManager] {health} / {maxHealth} is not between 0 and 1. NOT okay.");
@@ -95,14 +95,18 @@ public class UIManager : MonoBehaviour
             if(pauseMenuObject.activeSelf)
             {
                 TogglePauseMenu();
-                FadeToBlack();
+                FadeToBlack(); // Game --> Black
             }
             // rest everything relating to the UI menu.
         }
     }
-    private void FadeToBlack()
+    public void FadeToBlack() // Game --> Black
     {
-
+        fadeAnimator.SetTrigger(fadeToBlackID);
+    }
+    public void FadeBlackToClear()
+    {
+        fadeAnimator.SetTrigger(fadeBlackToClearID);
     }
     public void TogglePauseMenu()
     {
