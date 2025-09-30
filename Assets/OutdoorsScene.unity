@@ -2572,10 +2572,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIManager
   u_wallHealthSituation: {fileID: 928922347}
-  greemHealthBar: {fileID: 0}
+  greemHealthBar: {fileID: 1852922482}
   u_ammoSituation: {fileID: 1364928283}
   reloadIcon: {fileID: 49167158}
-  pauseMenuObject: {fileID: 0}
+  pauseMenuObject: {fileID: 215995224}
 --- !u!1 &1080610233
 GameObject:
   m_ObjectHideFlags: 0
@@ -4527,7 +4527,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

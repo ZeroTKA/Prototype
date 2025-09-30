@@ -39,7 +39,12 @@ public class UIManager : MonoBehaviour
     public void ChangeWallHealth(int health, int maxHealth)
     {
 
-        float newHealth = health / maxHealth;
+        float newHealth = (float)health / maxHealth;
+        Debug.Log($"[UI Manager] health: {health}" +
+            $"maxHealth: {maxHealth}" +
+            $"newHealth: {newHealth}");
+        
+
         if (newHealth < 0 || newHealth > 1)
         {
             Debug.LogError($"[UIManager] {health} / {maxHealth} is not between 0 and 1. NOT okay.");
@@ -90,9 +95,14 @@ public class UIManager : MonoBehaviour
             if(pauseMenuObject.activeSelf)
             {
                 TogglePauseMenu();
+                FadeToBlack();
             }
             // rest everything relating to the UI menu.
         }
+    }
+    private void FadeToBlack()
+    {
+
     }
     public void TogglePauseMenu()
     {
