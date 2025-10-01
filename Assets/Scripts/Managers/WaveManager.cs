@@ -12,12 +12,21 @@ public class WaveManager : MonoBehaviour
     readonly float zMaxRange = -25f;
 
     int counter = 0;
+    // -- Specialty Methods -- //
     void Start()
     {
+        if (TheDirector.Instance == null) { Debug.LogError("[WaveManager] TheDirector Instance not available"); }
+        else { TheDirector.Instance.OnGameStateChanged += Restart; }
         StartCoroutine(SpawnWave(enemyPrefab, 2000, .01f));
     }
+    private void OnDisable()
+    {
+        if(TheDirector.Instance == null){ Debug.Log("[WaveManager] The Director is null. Can't unsub");}
+        else{ TheDirector.Instance.OnGameStateChanged -= Restart; }
+            
+    }
 
-    // -- Supplemental Methods -- //
+    // -- Wave Methods -- //
     private Vector3 RandomPosition()
     {
         float x = Random.Range(xMinRange, xMaxRange);
@@ -25,34 +34,29 @@ public class WaveManager : MonoBehaviour
 
         return new Vector3(x, 1, z);
     }
-    
-
-    // -- Coroutines -- //
     IEnumerator SpawnWave(GameObject prefab, int numberOfEnemies, float delayBetweenSpawns, float delayBeforeStartingWave = 0)
     {
+        if(prefab == null) { Debug.LogError("[WaveManager] Prefab is null when calling SpawnWave()"); yield break; }
+
+        // -- Spawning the prefab -- //
         if(delayBeforeStartingWave > 0) yield return new WaitForSeconds(delayBeforeStartingWave);
         for (int i = 0; i < numberOfEnemies; i++)
         {
             yield return new WaitForSeconds(delayBetweenSpawns);
             counter++;
-            PoolManager.Instance.GetObjectFromPool(prefab, RandomPosition(), Quaternion.identity);
+            if (PoolManager.Instance == null) { Debug.LogError("[WaveManager] PoolManager is null when trying to SpawnWave()"); }
+            else { PoolManager.Instance.GetObjectFromPool(prefab, RandomPosition(), Quaternion.identity); }
         }
     }
 
+    // -- TheDirector Methods -- // ???
     private void Restart(TheDirector.GameState state)
     {
         if (state == TheDirector.GameState.Restart)
         {
-            Debug.Log("WaveManager Restart");
+            Debug.Log("[WaveManager] Restart");
             // rest everything relating to the pool.
         }
     }
-    private void OnEnable()
-    {
-        TheDirector.Instance.OnGameStateChanged += Restart;
-    }
-    private void OnDisable()
-    {
-        TheDirector.Instance.OnGameStateChanged -= Restart;
-    }
+
 }

@@ -28,12 +28,13 @@ public class UIManager : MonoBehaviour
     }
     public void Start()
     {
-        if (TheDirector.Instance == null) { Debug.LogError("TheDirector Instance not available"); }
+        if (TheDirector.Instance == null) { Debug.LogError("[UIManager] TheDirector Instance not available"); }
         else { TheDirector.Instance.OnGameStateChanged += Restart; }
     }
     private void OnDisable()
     {
-        TheDirector.Instance.OnGameStateChanged -= Restart;
+        if (TheDirector.Instance == null) { Debug.Log("[WaveManager] The Director is null. Can't unsub"); }
+        else { TheDirector.Instance.OnGameStateChanged -= Restart; }
     }
 
     // -- Healthbar -- //
@@ -90,7 +91,7 @@ public class UIManager : MonoBehaviour
             if(pauseMenuObject.activeSelf)
             {
                 TogglePauseMenu();
-                fader.FadeToBlack();
+                fader.FadeToBlack(1.3f);
             }
             // rest everything relating to the UI menu.
         }

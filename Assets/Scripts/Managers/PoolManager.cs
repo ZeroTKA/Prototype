@@ -39,7 +39,7 @@ public class PoolManager : MonoBehaviour
     private void Start()
     {
         // -- Subscribe -- //
-        if (TheDirector.Instance == null) { Debug.LogError("TheDirector Instance not available"); }
+        if (TheDirector.Instance == null) { Debug.LogError("[PoolManager] TheDirector Instance not available"); }
         else { TheDirector.Instance.OnGameStateChanged += Restart; }            
 
         // -- preload -- //
@@ -51,7 +51,8 @@ public class PoolManager : MonoBehaviour
     }
     private void OnDisable()
     {
-        TheDirector.Instance.OnGameStateChanged -= Restart;
+        if (TheDirector.Instance == null) { Debug.Log("[PoolManager] The Director is null. Can't unsub"); }
+        else { TheDirector.Instance.OnGameStateChanged -= Restart; }
     }
 
     // -- Main Methods -- //
