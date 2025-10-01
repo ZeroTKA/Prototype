@@ -1186,6 +1186,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaveManager
   enemyPrefab: {fileID: 2184366968305249912, guid: f0e5ccf1fbb55d146934c34807a247eb, type: 3}
+  firstWaveEnemyCount: 2000
+  spawnInterval: 0.01
 --- !u!1 &587001284
 GameObject:
   m_ObjectHideFlags: 0

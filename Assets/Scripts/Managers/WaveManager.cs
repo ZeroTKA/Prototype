@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class WaveManager : MonoBehaviour
 {
-    [SerializeField]GameObject enemyPrefab;    
+    [SerializeField]GameObject enemyPrefab;
+    [SerializeField] int firstWaveEnemyCount;
+    [SerializeField] float spawnInterval;
 
     // -- Spawn area 1 -- //
     readonly float xMinRange = 1f;
@@ -17,7 +19,7 @@ public class WaveManager : MonoBehaviour
     {
         if (TheDirector.Instance == null) { Debug.LogError("[WaveManager] TheDirector Instance not available"); }
         else { TheDirector.Instance.OnGameStateChanged += Restart; }
-        StartCoroutine(SpawnWave(enemyPrefab, 2000, .01f));
+        StartCoroutine(SpawnWave(enemyPrefab, firstWaveEnemyCount, spawnInterval));
     }
     private void OnDisable()
     {
