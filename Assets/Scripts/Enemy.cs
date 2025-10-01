@@ -12,18 +12,12 @@ public class Enemy : MonoBehaviour
 
     private float moveSpeed = 4f;
 
-    private void OnEnable()
-    {
-        Reset();
-        StartCoroutine(WalkTowardWall());
-    }
-
     // -- Main Methods -- //
-    private void Reset()
+    public void Reset()
     {
         Health = maxHealth;
         isAtWall = false;
-        WallThings.instance.WallIsGone += WallIsDestroyed;
+        StartCoroutine(WalkTowardWall());
     }
     public void TakeDamage(int damageAmount)
     {
@@ -61,7 +55,7 @@ public class Enemy : MonoBehaviour
         }
 
     }
-    private void WallIsDestroyed()
+    public void WallIsDestroyed()
     {
         StopAllCoroutines();
     }

@@ -81,6 +81,10 @@ public class PoolManager : MonoBehaviour
             else
             {
                 poolable.PoolIndex = index;
+                if(activate)
+                {
+                    poolable.OnSpawn();
+                }
             }
         }
         else
@@ -97,6 +101,13 @@ public class PoolManager : MonoBehaviour
             GameObject enemy = enemiesList[index];
             enemy.transform.SetPositionAndRotation(position, rotation);
             enemy.SetActive(true);
+            if(enemy.TryGetComponent<Poolable>(out var poolable))
+            {
+                poolable.OnSpawn();
+            }
+            else { Debug.LogError("[PoolManager] Trying to GetObjectFromPool but poolable doesn't exist"); }
+
+
         }
         // -- else we just create -- //
         else
@@ -120,14 +131,18 @@ public class PoolManager : MonoBehaviour
         }
 
         // -- Now we just push things back to where they need to be. -- //
-        var poolable = obj.GetComponent<Poolable>();
         string name = obj.name.ToLower();
         obj.SetActive(false);
         switch (name[..^7]) // pull out this switch and make it a method for ease of reading??
                             // suggested to get rid of name[..^7] and use name.Replace("(Clone)", "").ToLower().
         {
             case "enemy":
-                enemyIndexStack.Push(poolable.PoolIndex);
+                if(obj.TryGetComponent<Poolable>(out var poolable))
+                {
+                    enemyIndexStack.Push(poolable.PoolIndex);
+                    poolable.OnDespawn();
+                }
+
                 break;
             default:
                 Debug.LogWarning($"{obj.name} missing switch case to return index. Substring: {name[..^7]}");
