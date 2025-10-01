@@ -1,6 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
 
 public class Enemy : MonoBehaviour
 {
@@ -10,11 +10,12 @@ public class Enemy : MonoBehaviour
 
     bool isAtWall = false;
 
-    private float moveSpeed = 4f;
+    private readonly float moveSpeed = 4f;
 
     // -- Main Methods -- //
     public void Reset()
     {
+        StopAllCoroutines();
         Health = maxHealth;
         isAtWall = false;
         StartCoroutine(WalkTowardWall());
@@ -24,11 +25,17 @@ public class Enemy : MonoBehaviour
         // -- Taking Damage Logic -- //
         if (damageAmount < 0)
         {
-            Debug.LogError($"{damageAmount} is trying to give damage to {gameObject.name}. damage must be positive");
+            Debug.LogError($"[Enemy] {damageAmount} is what's trying to damage this enemy. Damage must be positive");
         }
         else if (Health - damageAmount > 0) Health -= damageAmount;
-        else PoolManager.Instance.ReturnObjectToPool(gameObject);
-        WallThings.instance.WallIsGone -= WallIsDestroyed;
+        else
+        {
+            if (PoolManager.Instance == null)
+            {
+                Debug.LogError("[Enemy] PoolManager is null. Can't return object.");
+            }
+            else { PoolManager.Instance.ReturnObjectToPool(gameObject); }
+        }
     }
 
     // -- Coroutines -- //
@@ -48,7 +55,11 @@ public class Enemy : MonoBehaviour
     }
     IEnumerator Attack()
     {
-        while(true)
+        if (WallThings.instance == null)
+        { 
+            Debug.LogError("[Enemy] WallThings.instance is empty.Stopping Attack Coroutine"); yield break; 
+        }
+        while (true)
         {
             yield return new WaitForSeconds(3);
             WallThings.instance.ChangeHealth(-3);
