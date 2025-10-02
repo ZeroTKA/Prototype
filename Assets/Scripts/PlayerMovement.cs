@@ -1,5 +1,3 @@
-using System.Data.SqlTypes;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -27,22 +25,38 @@ public class PlayerMovement : MonoBehaviour
     private InputAction jumpAction;
     private InputAction escAction;
 
+    // -- Specialty Methods -- //
     private void Start()
     {
-        var playerInput = GetComponent<PlayerInput>();
-        lookAction = playerInput.actions["Look"];
-        moveAction = playerInput.actions["Move"];
-        jumpAction = playerInput.actions["Jump"];
-        escAction = playerInput.actions["Pause"];
+        if (controller == null)
+            Debug.LogError("[PlayerMovement] CharacterController not assigned.");
+        if (cameraTransform == null)
+            Debug.LogError("[PlayerMovement] Camera Transform not assigned.");
+
+        if (TryGetComponent<PlayerInput>(out var playerInput))
+        {
+            lookAction = playerInput.actions["Look"];
+            moveAction = playerInput.actions["Move"];
+            jumpAction = playerInput.actions["Jump"];
+            escAction = playerInput.actions["Pause"];
+        }
+        else
+        {
+            Debug.LogError("[PlayerMovement] Unable to find PlayerInput.");
+        }
         Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
     {
         // -- UI Button Pushes -- //
-        if(escAction.triggered)
+        if (escAction.triggered)
         {
-            UIManager.Instance.TogglePauseMenu();
+            if (UIManager.Instance == null)
+            {
+                Debug.LogError("[PlayerMovement] Can't find the UIManager.");
+            }
+            else {UIManager.Instance.TogglePauseMenu(); }
         }
 
 
@@ -50,8 +64,25 @@ public class PlayerMovement : MonoBehaviour
         Rotate();
         Movement();
         Jump();
-        controller.Move((inputMove + velocity) * Time.deltaTime);
+        if (controller == null)
+        {
+            Debug.LogError("[PlayerMovment] Can't find the UIManager in Update");
+        }
+        else { controller.Move((inputMove + velocity) * Time.deltaTime); }
+    }    
+    private void OnEnable()
+    {
+        lookAction?.Enable();
+        moveAction?.Enable();
+        jumpAction?.Enable();
     }
+    private void OnDisable()
+    {        
+        lookAction?.Disable();
+        moveAction?.Disable();
+        jumpAction?.Disable();
+    }
+    // -- Main Methods -- //
     private void Jump()
     {
         isGrounded = controller.isGrounded;
@@ -68,11 +99,11 @@ public class PlayerMovement : MonoBehaviour
         velocity.y += gravity * Time.deltaTime;
     }
     private void Movement()
-    {        
+    {
         if (moveAction == null) return;
 
         Vector2 input = moveAction.ReadValue<Vector2>();
-        inputMove = (transform.right * input.x + transform.forward * input.y) * moveSpeed;        
+        inputMove = (transform.right * input.x + transform.forward * input.y) * moveSpeed;
 
     }
     private void Rotate()
@@ -90,16 +121,5 @@ public class PlayerMovement : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -80f, 80f);
         cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
     }
-    private void OnEnable()
-    {
-        lookAction?.Enable();
-        moveAction?.Enable();
-        jumpAction?.Enable();
-    }
-    private void OnDisable()
-    {        
-        lookAction?.Disable();
-        moveAction?.Disable();
-        jumpAction?.Disable();
-    }
+
 }
