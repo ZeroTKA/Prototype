@@ -41,10 +41,10 @@ public class Enemy : MonoBehaviour
     // -- Coroutines -- //
     IEnumerator WalkTowardWall()
     {
-        while(!isAtWall)
+        while (!isAtWall)
         {
             gameObject.transform.position += new Vector3(0, 0, moveSpeed * Time.deltaTime);
-            if(gameObject.transform.position.z > wallStopZ)
+            if (gameObject.transform.position.z > wallStopZ)
             {
                 isAtWall = true;
                 transform.position = new Vector3(transform.position.x, transform.position.y, wallStopZ);
@@ -56,8 +56,8 @@ public class Enemy : MonoBehaviour
     IEnumerator Attack()
     {
         if (WallThings.instance == null)
-        { 
-            Debug.LogError("[Enemy] WallThings.instance is empty.Stopping Attack Coroutine"); yield break; 
+        {
+            Debug.LogError("[Enemy] WallThings.instance is empty.Stopping Attack Coroutine"); yield break;
         }
         while (true)
         {
@@ -70,7 +70,7 @@ public class Enemy : MonoBehaviour
     {
         StopAllCoroutines();
     }
-    
+
     IEnumerator Death()
     {
         yield return new WaitForSeconds(4);

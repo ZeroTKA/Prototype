@@ -13,13 +13,13 @@ public class Poolable : MonoBehaviour
     }
     public void OnDespawn()
     {
-        if(WallThings.instance == null) { Debug.LogError("[Poolable] WallThings null. Can't unsub"); }
+        if (WallThings.instance == null) { Debug.LogError("[Poolable] WallThings null. Can't unsub"); }
         else { WallThings.instance.WallIsGone -= WallIsDestroyed; }
     }
 
     private void WallIsDestroyed()
     {
-        if(gameObject.TryGetComponent<Enemy>(out var enemy))
+        if (gameObject.TryGetComponent<Enemy>(out var enemy))
         {
             enemy.WallIsDestroyed();
         }

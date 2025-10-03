@@ -56,7 +56,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 Debug.LogError("[PlayerMovement] Can't find the UIManager.");
             }
-            else {UIManager.Instance.TogglePauseMenu(); }
+            else { UIManager.Instance.TogglePauseMenu(); }
         }
 
 
@@ -69,7 +69,7 @@ public class PlayerMovement : MonoBehaviour
             Debug.LogError("[PlayerMovment] Can't find the UIManager in Update");
         }
         else { controller.Move((inputMove + velocity) * Time.deltaTime); }
-    }    
+    }
     private void OnEnable()
     {
         lookAction?.Enable();
@@ -77,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
         jumpAction?.Enable();
     }
     private void OnDisable()
-    {        
+    {
         lookAction?.Disable();
         moveAction?.Disable();
         jumpAction?.Disable();

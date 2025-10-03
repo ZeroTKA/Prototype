@@ -6,7 +6,7 @@ public class PlayerShooting : MonoBehaviour
 {
     [SerializeField] Transform fpsCamera;
     private readonly int raycastDistance = 50;
-    
+
 
     // -- Gun Stats -- //
     private InputAction shootAction;
@@ -38,7 +38,7 @@ public class PlayerShooting : MonoBehaviour
         {
             if (value < 0)
             {
-                SpareAmmo = 0;
+                _spareAmmo = 0;
                 Debug.LogError($"{value} is trying to be set for _carriedAmmo. This must be a positive number");
             }
             else
@@ -55,25 +55,48 @@ public class PlayerShooting : MonoBehaviour
     private readonly float shootSpeed = 1;
     private readonly float reloadSpeed = 1;
 
-    
+    // -- Specialty Methods -- //
 
     private void Start()
     {
+        // -- Error Checks -- //
+        if (UIManager.Instance == null)
+        {
+            Debug.LogError("[PlayerShooting] UIManager is missing from the start");
+        }
+        else
+        {
+            UIManager.Instance.ChangeAmmoSituation(CurrentAmmo, maxAmmo);
+        }
+        if (fpsCamera == null)
+        {
+            Debug.LogError("[PlayerShooting] FPS camera is null. Did you forget to set it?");
+        }
+        if (maxAmmo <= 0)
+        {
+            Debug.LogError("Max Ammo is NOT greater than 0. Unacceptable.");
+        }
+
+        // -- Doing Cool Things -- //
         playerMask = ~LayerMask.GetMask("Ignore Raycast"); // player masked used to be ignored by raycast.
-        var playerInput = GetComponent<PlayerInput>();
-        shootAction = playerInput.actions["Attack"];
-        reloadAction = playerInput.actions["Reload"];
+        if (TryGetComponent<PlayerInput>(out var playerInput))
+        {
+            shootAction = playerInput.actions["Attack"];
+            reloadAction = playerInput.actions["Reload"];
+            if (shootAction == null) { Debug.LogError("[PlayerShooting] shootAction is null. Can't do actions"); }
+            if (reloadAction == null) { Debug.LogError("[PlayerShooting] reloadAction is null. Can't do actions"); }
+        }
         CurrentAmmo = maxAmmo;
         SpareAmmo = 130;
-        UIManager.Instance.ChangeAmmoSituation(CurrentAmmo, maxAmmo);
-    }
 
+
+    }
     void Update()
     {
         // -- Can We Shoot? -- //
         if (shootAction.triggered && !areWeReloading && canWeShoot)
         {
-            if(!isMagazineEmpty)
+            if (!isMagazineEmpty)
             {
                 Shoot();
             }
@@ -89,6 +112,16 @@ public class PlayerShooting : MonoBehaviour
             Reload();
         }
     }
+    private void OnEnable()
+    {
+        shootAction?.Enable();
+        reloadAction?.Enable();
+    }
+    private void OnDisable()
+    {
+        shootAction?.Disable();
+        reloadAction?.Disable();
+    }
 
     // -- Methods -- //
     private void Shoot()
@@ -96,7 +129,7 @@ public class PlayerShooting : MonoBehaviour
         // -- Shoot the bullet -- //
         RaycastHit hit;
         Debug.DrawRay(fpsCamera.transform.position, fpsCamera.transform.forward * raycastDistance, Color.red, 1f); // debug only
-        if (Physics.Raycast(fpsCamera.transform.position, fpsCamera.transform.forward, out hit, raycastDistance,playerMask)) 
+        if (Physics.Raycast(fpsCamera.transform.position, fpsCamera.transform.forward, out hit, raycastDistance, playerMask))
         {
             if (hit.collider.TryGetComponent<Enemy>(out Enemy enemy)) // could also do tags. 
             {
@@ -109,15 +142,25 @@ public class PlayerShooting : MonoBehaviour
         if (CurrentAmmo == 0) isMagazineEmpty = true;
         canWeShoot = false;
         StartCoroutine(ResetCanWeShootBool());
-        UIManager.Instance.ChangeAmmoSituation(CurrentAmmo, maxAmmo);
-
-
-
+        if (UIManager.Instance == null)
+        {
+            Debug.LogError("[PlayerShooting] UIManager is null when trying to shoot.");
+        }
+        else
+        {
+            UIManager.Instance.ChangeAmmoSituation(CurrentAmmo, maxAmmo);
+        }
     }
     private void Reload()
     {
-
-        UIManager.Instance.ReloadIcon(reloadSpeed);
+        if (UIManager.Instance == null)
+        {
+            Debug.LogError("[PlayerShooting] UIManager is null when trying to shoot.");
+        }
+        else
+        {
+            UIManager.Instance.ReloadIcon(reloadSpeed);
+        }
         areWeReloading = true;
         StartCoroutine(Reloading()); // this contains all the logic because we want things to change at the END.
     }
@@ -137,7 +180,7 @@ public class PlayerShooting : MonoBehaviour
         if (SpareAmmo >= maxAmmo - CurrentAmmo)
         {
             SpareAmmo -= maxAmmo - CurrentAmmo;
-            CurrentAmmo = maxAmmo;            
+            CurrentAmmo = maxAmmo;
         }
         //if we don't have enough to fill
         else
@@ -149,17 +192,15 @@ public class PlayerShooting : MonoBehaviour
         // -- Deal with bools and shit -- //
         areWeReloading = false;
         isMagazineEmpty = false;
-        UIManager.Instance.ChangeAmmoSituation(CurrentAmmo, maxAmmo); // don't forget this. Someone might be sad if you do.
+        if (UIManager.Instance == null)
+        {
+            Debug.LogError("[PlayerShooting] UIManager is null for some reason.");
+        }
+        else
+        {
+            UIManager.Instance.ChangeAmmoSituation(CurrentAmmo, maxAmmo); // don't forget this. Someone might be sad if you do.
+        }
     }
 
-    private void OnEnable()
-    {
-        shootAction?.Enable();
-        reloadAction?.Enable();
-    }
-    private void OnDisable()
-    {
-        shootAction?.Disable();
-        reloadAction?.Disable();        
-    }
+
 }
