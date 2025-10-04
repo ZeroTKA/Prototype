@@ -24,8 +24,20 @@ public class WallThings : MonoBehaviour
 
     void Start()
     {
+        if (maxHealth <= 0)
+        {
+            Debug.LogError("[WallThings] maxHealth isn't a positive number. What's up with that?");         
+        }
         Health = maxHealth;
-        UIManager.Instance.ChangeWallHealth(Health, maxHealth);
+        if(UIManager.Instance == null)
+        {
+            Debug.LogError("[WallThings] UIManager is null. That's not good.");
+        }
+        else
+        {
+            UIManager.Instance.ChangeWallHealth(Health, maxHealth);
+        }
+            
 
     }
     private void Update()
@@ -38,13 +50,33 @@ public class WallThings : MonoBehaviour
         Health += healthChangeAmount;
         if (Health <= 0)
         {
+            if(WallIsGone == null)
+            {
+                Debug.LogWarning("[WallThings] Nothing was subscribed to WallIsGone when health reached 0. " +
+                    "How did we do that? Is that a problem?");
+            }
             WallIsGone?.Invoke();
-            TheDirector.Instance.SetGameState(TheDirector.GameState.GameOver);
+            if(TheDirector.Instance == null)
+            {
+                Debug.LogError("[WallThings] TheDirector is null. Can't change gamestate");
+            }
+            else
+            {
+                TheDirector.Instance.SetGameState(TheDirector.GameState.GameOver);
+            }                
         }
         if (timer >= .2f)
         {
-            UIManager.Instance.ChangeWallHealth(Health, maxHealth);
-            timer = 0;
+            if(UIManager.Instance == null)
+            {
+                Debug.LogError("[WallThings] UIManager is null. Can't change health");
+            }
+            else
+            {
+                UIManager.Instance.ChangeWallHealth(Health, maxHealth);
+                timer = 0;
+            }
+
         }
     }
 
