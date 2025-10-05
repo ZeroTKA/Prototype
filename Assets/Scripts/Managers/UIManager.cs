@@ -77,6 +77,7 @@ public class UIManager : MonoBehaviour
     {
         yield return new WaitForSeconds(fadeTime);
         SyncCoordinator.Instance.RestartReady();
+        Debug.Log("[UIManager] Restart Ready");
     }
 
     // -- Menu Methods -- //
@@ -98,6 +99,7 @@ public class UIManager : MonoBehaviour
                 TogglePauseMenu();
                 fader.FadeToBlack(1.3f);
             }
+            Debug.Log("[UIManager] Restart");
             StartCoroutine(RestartComplete(5.3f));
             // rest everything relating to the UI menu.
         }

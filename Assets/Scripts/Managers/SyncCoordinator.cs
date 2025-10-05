@@ -29,7 +29,12 @@ public class SyncCoordinator : MonoBehaviour
             {
                 Debug.LogWarning("[SyncCoordinator] The Director is null. What hapened??. Gamestate not changed");
             }
-            else { pendingManagersToRestart = totalManagersToRestart; fader.FadeBlackToClear(); }
+            else 
+            { 
+                pendingManagersToRestart = totalManagersToRestart; 
+                fader.FadeBlackToClear();
+                TheDirector.Instance.SetGameState(TheDirector.GameState.Wave);
+            }
         }
         else if (pendingManagersToRestart < 0)
         {

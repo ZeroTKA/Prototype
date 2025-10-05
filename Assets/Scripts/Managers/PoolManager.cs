@@ -162,6 +162,9 @@ public class PoolManager : MonoBehaviour
             {
                 ReturnObjectToPool(enemiesList[i]);
             }
+            Debug.Log("[PoolManager] Restart");
+            SyncCoordinator.Instance.RestartReady();
+            Debug.Log("[PoolManager] Restart Ready");
             // rest everything relating to the pool.
         }
     }

@@ -57,6 +57,8 @@ public class WaveManager : MonoBehaviour
         if (state == TheDirector.GameState.Restart)
         {
             Debug.Log("[WaveManager] Restart");
+            SyncCoordinator.Instance.RestartReady();
+            Debug.Log("[WaveManager] Reastart Ready");
             // rest everything relating to the pool.
         }
     }

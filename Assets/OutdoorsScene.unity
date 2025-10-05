@@ -3455,7 +3455,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 596aa9861ad7c864981aaf4485d9fd21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SyncCoordinator
-  totalManagersToRestart: 1
+  totalManagersToRestart: 3
   fader: {fileID: 2007998546}
 --- !u!1 &1701279346
 GameObject:
