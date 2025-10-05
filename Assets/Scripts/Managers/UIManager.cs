@@ -33,7 +33,7 @@ public class UIManager : MonoBehaviour
     }
     private void OnDisable()
     {
-        if (TheDirector.Instance == null) { Debug.Log("[WaveManager] The Director is null. Can't unsub"); }
+        if (TheDirector.Instance == null) { Debug.Log("[UIManager] The Director is null. Can't unsub"); }
         else { TheDirector.Instance.OnGameStateChanged -= Restart; }
     }
 
@@ -73,6 +73,11 @@ public class UIManager : MonoBehaviour
         }
         reloadIcon.fillAmount = 0f; // this one is important because when we are "full" we want to get rid of the icon"
     }
+    private IEnumerator RestartComplete(float fadeTime)
+    {
+        yield return new WaitForSeconds(fadeTime);
+        SyncCoordinator.Instance.RestartReady();
+    }
 
     // -- Menu Methods -- //
     public void ExitGame()
@@ -93,6 +98,7 @@ public class UIManager : MonoBehaviour
                 TogglePauseMenu();
                 fader.FadeToBlack(1.3f);
             }
+            StartCoroutine(RestartComplete(5.3f));
             // rest everything relating to the UI menu.
         }
     }
