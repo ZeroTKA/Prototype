@@ -96,8 +96,7 @@ public class UIManager : MonoBehaviour
             // Is this what I actually want?  Maybe countdown? Or screen to black?
             if(pauseMenuObject.activeSelf)
             {
-                TogglePauseMenu();
-                fader.FadeToBlack(1.3f);
+                TogglePauseMenu();                
             }
             Debug.Log("[UIManager] Restart");
             StartCoroutine(RestartComplete(5.3f));
@@ -118,4 +117,13 @@ public class UIManager : MonoBehaviour
             Time.timeScale = 1f;
         }
     }
+    public void FadeToBlack(float fadeTime)
+    {
+        fader.FadeToBlack(fadeTime);
+    }
+    public void FadeBlackToClear(float fadeTime)
+    {
+        fader.FadeBlackToClear(fadeTime);
+    }
+
 }

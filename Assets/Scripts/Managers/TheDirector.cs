@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class TheDirector : MonoBehaviour
@@ -27,9 +28,9 @@ public class TheDirector : MonoBehaviour
         GameOver,
         Restart
     }
-    public void Restart()
+    public void Restart(float fadeTime)
     {
-        SetGameState(GameState.Restart);
+        StartCoroutine(Restarting(fadeTime));
     }
     public void SetGameState(GameState newState)
     {
@@ -40,5 +41,11 @@ public class TheDirector : MonoBehaviour
             OnGameStateChanged?.Invoke(newState);
             Debug.Log($"{newState} state activated.");
         }
+    }
+    IEnumerator Restarting(float fadeTime)
+    {
+        UIManager.Instance.FadeToBlack(fadeTime);
+        yield return new WaitForSecondsRealtime(fadeTime);        
+        SetGameState(GameState.Restart);
     }
 }

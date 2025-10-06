@@ -3,8 +3,10 @@ using UnityEngine;
 
 public class WallThings : MonoBehaviour
 {
+    [SerializeField] int startingHealth;
     public int Health {  get; private set; }
-    [SerializeField] int maxHealth;
+    
+    private int maxHealth;
     public event Action WallIsGone;
     public static WallThings instance;
 
@@ -24,22 +26,35 @@ public class WallThings : MonoBehaviour
 
     void Start()
     {
-        if (maxHealth <= 0)
+        // -- Subscribe -- //
+        if(TheDirector.Instance == null)
         {
-            Debug.LogError("[WallThings] maxHealth isn't a positive number. What's up with that?");         
+            Debug.LogError("[WallThings] TheDirector is null.");
         }
-        Health = maxHealth;
-        if(UIManager.Instance == null)
-        {
-            Debug.LogError("[WallThings] UIManager is null. That's not good.");
-        }
-        else
-        {
-            UIManager.Instance.ChangeWallHealth(Health, maxHealth);
-        }
+        else { TheDirector.Instance.OnGameStateChanged += WallRestart; }
+        ResetHealth();
             
 
     }
+    private void OnDisable()
+    {
+        if (TheDirector.Instance == null)
+        {
+            Debug.LogWarning("[WallThings] TheDirector is null and we can't unsubscribe. That's probably bad.");
+        }
+        else { TheDirector.Instance.OnGameStateChanged -= WallRestart; }
+    }
+
+    private void WallRestart(TheDirector.GameState state)
+    {
+        if(state == TheDirector.GameState.Restart)
+        {
+            Debug.Log("[WallThings] Restart");
+            ResetHealth();
+            SyncCoordinator.Instance.RestartReady();
+        }
+    }
+
     private void Update()
     {
         timer += Time.deltaTime;
@@ -77,6 +92,23 @@ public class WallThings : MonoBehaviour
                 timer = 0;
             }
 
+        }
+    }
+    private void ResetHealth()
+    {
+        maxHealth = startingHealth;
+        if (maxHealth <= 0)
+        {
+            Debug.LogError("[WallThings] maxHealth isn't a positive number. What's up with that?");
+        }
+        Health = maxHealth;
+        if (UIManager.Instance == null)
+        {
+            Debug.LogError("[WallThings] UIManager is null. That's not good.");
+        }
+        else
+        {
+            UIManager.Instance.ChangeWallHealth(Health, startingHealth);
         }
     }
 

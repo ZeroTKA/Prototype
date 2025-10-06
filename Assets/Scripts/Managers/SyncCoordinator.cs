@@ -4,9 +4,6 @@ public class SyncCoordinator : MonoBehaviour
 {
     [SerializeField] private int totalManagersToRestart;
     private int pendingManagersToRestart;
-
-    [SerializeField] private UIFadeScript fader;
-
     public static SyncCoordinator Instance { get; private set; }
     public void Awake()
     {
@@ -31,8 +28,8 @@ public class SyncCoordinator : MonoBehaviour
             }
             else 
             { 
-                pendingManagersToRestart = totalManagersToRestart; 
-                fader.FadeBlackToClear();
+                pendingManagersToRestart = totalManagersToRestart;
+                UIManager.Instance.FadeBlackToClear(3f);
                 TheDirector.Instance.SetGameState(TheDirector.GameState.Wave);
             }
         }
