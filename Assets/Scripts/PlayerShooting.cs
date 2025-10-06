@@ -68,6 +68,14 @@ public class PlayerShooting : MonoBehaviour
         {
             UIManager.Instance.ChangeAmmoSituation(CurrentAmmo, maxAmmo);
         }
+        if (TheDirector.Instance == null)
+        {
+            Debug.LogError("[PlayerShooting] TheDirector is missing from start. What happened?");
+        }
+        else
+        {
+            TheDirector.Instance.OnGameStateChanged += Restart;
+        }
         if (fpsCamera == null)
         {
             Debug.LogError("[PlayerShooting] FPS camera is null. Did you forget to set it?");
@@ -76,9 +84,6 @@ public class PlayerShooting : MonoBehaviour
         {
             Debug.LogError("Max Ammo is NOT greater than 0. Unacceptable.");
         }
-
-        // -- Doing Cool Things -- //
-        playerMask = ~LayerMask.GetMask("Ignore Raycast"); // player masked used to be ignored by raycast.
         if (TryGetComponent<PlayerInput>(out var playerInput))
         {
             shootAction = playerInput.actions["Attack"];
@@ -86,6 +91,10 @@ public class PlayerShooting : MonoBehaviour
             if (shootAction == null) { Debug.LogError("[PlayerShooting] shootAction is null. Can't do actions"); }
             if (reloadAction == null) { Debug.LogError("[PlayerShooting] reloadAction is null. Can't do actions"); }
         }
+
+        // -- Doing Cool Things -- //
+        playerMask = ~LayerMask.GetMask("Ignore Raycast"); // player masked used to be ignored by raycast.
+
         CurrentAmmo = maxAmmo;
         SpareAmmo = 130;
 
@@ -121,6 +130,15 @@ public class PlayerShooting : MonoBehaviour
     {
         shootAction?.Disable();
         reloadAction?.Disable();
+
+        if (TheDirector.Instance == null)
+        {
+            Debug.LogError("[PlayerShooting] TheDirector is missing from OnDisable. What happened?");
+        }
+        else
+        {
+            TheDirector.Instance.OnGameStateChanged -= Restart;
+        }
     }
 
     // -- Methods -- //
@@ -164,6 +182,23 @@ public class PlayerShooting : MonoBehaviour
         areWeReloading = true;
         StartCoroutine(Reloading()); // this contains all the logic because we want things to change at the END.
     }
+    private void Restart(TheDirector.GameState gameState)
+    {
+        if(gameState == TheDirector.GameState.Restart)
+        {
+            CurrentAmmo = maxAmmo;
+            SpareAmmo = 130;
+            if (UIManager.Instance == null)
+            {
+                Debug.LogError("[PlayerShooting] UIManager is null when trying to restart the ammo.");
+            }
+            else
+            {
+                UIManager.Instance.ChangeAmmoSituation(CurrentAmmo, maxAmmo);
+            }
+            SyncCoordinator.Instance.RestartReady();
+        }
+    }
 
     // -- Coroutines -- //
     IEnumerator ResetCanWeShootBool()
@@ -201,6 +236,4 @@ public class PlayerShooting : MonoBehaviour
             UIManager.Instance.ChangeAmmoSituation(CurrentAmmo, maxAmmo); // don't forget this. Someone might be sad if you do.
         }
     }
-
-
 }
