@@ -8,18 +8,12 @@ public class TheDirector : MonoBehaviour
     /// <summary>
     /// should probably get; private set to all instances?.
     /// </summary>
+
+    [SerializeField] GameObject playerPrefab;
+    Vector3 spawnPoint  = new Vector3(6.872f, .29f, -1.508f);
     public static TheDirector Instance { get; private set; }
     public GameState CurrentState { get; private set; }
     public event Action<GameState> OnGameStateChanged;
-
-    void Awake()
-    {
-        if(Instance == null) { Instance = this; }      
-        else { Debug.LogError("Multiple Directors"); Destroy(gameObject); }
-
-        SetGameState(GameState.MainMenu);
-    }
-
     public enum GameState
     {
         MainMenu,
@@ -28,6 +22,22 @@ public class TheDirector : MonoBehaviour
         GameOver,
         Restart
     }
+
+
+    // -- Specialty Methods -- //
+    void Awake()
+    {
+        if(Instance == null) { Instance = this; }      
+        else { Debug.LogError("Multiple Directors"); Destroy(gameObject); }
+        if(playerPrefab == null)
+        {
+            Debug.LogError("[TheDirector] Player prefab is null. Can't paly the game can we? Nerd.");
+        }
+        SpawnPlayer();
+        SetGameState(GameState.Wave);
+    }
+
+    // -- Main Methods -- //
     public void Restart(float fadeTime)
     {
         StartCoroutine(Restarting(fadeTime));
@@ -42,6 +52,12 @@ public class TheDirector : MonoBehaviour
             Debug.Log($"{newState} state activated.");
         }
     }
+    private void SpawnPlayer()
+    {
+        Instantiate(playerPrefab, spawnPoint, Quaternion.Euler(0, 180f, 0f));
+    }
+
+    // -- Coroutines -- //
     IEnumerator Restarting(float fadeTime)
     {
         UIManager.Instance.FadeToBlack(fadeTime);
