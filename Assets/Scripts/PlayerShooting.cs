@@ -102,23 +102,26 @@ public class PlayerShooting : MonoBehaviour
     }
     void Update()
     {
-        // -- Can We Shoot? -- //
-        if (shootAction.triggered && !areWeReloading && canWeShoot)
+        if(TheDirector.Instance.CurrentState == TheDirector.GameState.Wave)
         {
-            if (!isMagazineEmpty)
+            // -- Can We Shoot? -- //
+            if (shootAction.triggered && !areWeReloading && canWeShoot)
             {
-                Shoot();
+                if (!isMagazineEmpty)
+                {
+                    Shoot();
+                }
+                else
+                {
+                    // play dud sound
+                }
             }
-            else
-            {
-                // play dud sound
-            }
-        }
 
-        // -- Can We Reload? -- //
-        if (reloadAction.triggered && CurrentAmmo < maxAmmo && !areWeReloading && SpareAmmo > 0)
-        {
-            Reload();
+            // -- Can We Reload? -- //
+            if (reloadAction.triggered && CurrentAmmo < maxAmmo && !areWeReloading && SpareAmmo > 0)
+            {
+                Reload();
+            }
         }
     }
     private void OnEnable()

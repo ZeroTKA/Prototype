@@ -3,7 +3,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private CharacterController controller;
+    [SerializeField] private CharacterController controller;   
+
     //-- Rotation Variables --//
     [SerializeField] private Transform cameraTransform; // Drag your camera here
     float xRotation = 0f;
@@ -61,14 +62,18 @@ public class PlayerMovement : MonoBehaviour
 
 
         // -- Player Button Pushes -- //
-        Rotate();
-        Movement();
-        Jump();
-        if (controller == null)
+        if(TheDirector.Instance.CurrentState == TheDirector.GameState.Wave)
         {
-            Debug.LogError("[PlayerMovment] Can't find the UIManager in Update");
+            Rotate();
+            Movement();
+            Jump();
+            if (controller == null)
+            {
+                Debug.LogError("[PlayerMovment] Can't find the UIManager in Update");
+            }
+            else { controller.Move((inputMove + velocity) * Time.deltaTime); }
         }
-        else { controller.Move((inputMove + velocity) * Time.deltaTime); }
+
     }
     private void OnEnable()
     {
