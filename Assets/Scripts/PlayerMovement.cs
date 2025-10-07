@@ -3,7 +3,9 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private CharacterController controller;   
+    [SerializeField] private CharacterController controller;
+    Vector3 spawnPoint = new Vector3(6.85f, 0.9f, -2f);
+    Vector3 spawnRotation = new Vector3(0, 180, 0);
 
     //-- Rotation Variables --//
     [SerializeField] private Transform cameraTransform; // Drag your camera here
@@ -33,6 +35,11 @@ public class PlayerMovement : MonoBehaviour
             Debug.LogError("[PlayerMovement] CharacterController not assigned.");
         if (cameraTransform == null)
             Debug.LogError("[PlayerMovement] Camera Transform not assigned.");
+        if (TheDirector.Instance == null)
+        {
+            Debug.LogError("[PlayerMovment] TheDirector is null. That's not a good START");
+        }
+        else {TheDirector.Instance.OnGameStateChanged += Restart; }
 
         if (TryGetComponent<PlayerInput>(out var playerInput))
         {
@@ -86,6 +93,12 @@ public class PlayerMovement : MonoBehaviour
         lookAction?.Disable();
         moveAction?.Disable();
         jumpAction?.Disable();
+        if (TheDirector.Instance == null)
+        {
+            Debug.LogError("[PlayerMovment] TheDirector is null. That's not a good way to DISABLE");
+        }
+        else {TheDirector.Instance.OnGameStateChanged -= Restart;}
+
     }
     // -- Main Methods -- //
     private void Jump()
@@ -125,6 +138,24 @@ public class PlayerMovement : MonoBehaviour
         xRotation -= mouseDelta.y;
         xRotation = Mathf.Clamp(xRotation, -80f, 80f);
         cameraTransform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+    }
+    private void Restart(TheDirector.GameState gameState)
+    {
+        if(gameState == TheDirector.GameState.Restart)
+        {
+            velocity = Vector3.zero;
+            isGrounded = true;
+            gameObject.transform.position = spawnPoint; // a hair above the original spawn in Y axis. 
+            gameObject.transform.rotation = Quaternion.Euler(spawnRotation); // camera horizontal reset
+            
+            xRotation = 0f; // camera vertical look reset
+            cameraTransform.localRotation = Quaternion.Euler(0f, 0f, 0f); // camera vertical look reset
+            if (SyncCoordinator.Instance == null)
+            {
+                Debug.LogError("[PlayerMovement] SyncCooridnator is null. Can't restart properly");
+            }
+            SyncCoordinator.Instance.RestartReady();
+        }
     }
 
 }

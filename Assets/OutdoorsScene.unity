@@ -3247,7 +3247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 596aa9861ad7c864981aaf4485d9fd21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SyncCoordinator
-  totalManagersToRestart: 5
+  totalManagersToRestart: 6
 --- !u!1 &1701279346
 GameObject:
   m_ObjectHideFlags: 0

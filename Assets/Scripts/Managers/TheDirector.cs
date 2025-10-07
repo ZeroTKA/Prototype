@@ -10,7 +10,9 @@ public class TheDirector : MonoBehaviour
     /// </summary>
 
     [SerializeField] GameObject playerPrefab;
-    Vector3 spawnPoint  = new Vector3(6.872f, .29f, -1.508f);
+    Vector3 spawnPoint = new Vector3(6.85f, .35f, -2f);
+    Vector3 spawnRotation = new Vector3(0, 180, 0);
+    
     public static TheDirector Instance { get; private set; }
     public GameState CurrentState { get; private set; }
     public event Action<GameState> OnGameStateChanged;
@@ -54,7 +56,7 @@ public class TheDirector : MonoBehaviour
     }
     private void SpawnPlayer()
     {
-        Instantiate(playerPrefab, spawnPoint, Quaternion.Euler(0, 180f, 0f));
+        Instantiate(playerPrefab, spawnPoint, Quaternion.Euler(spawnRotation));
     }
 
     // -- Coroutines -- //
