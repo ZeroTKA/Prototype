@@ -27,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
     private InputAction moveAction;
     private InputAction jumpAction;
     private InputAction escAction;
+    private InputAction readyAction;
 
     // -- Specialty Methods -- //
     private void Start()
@@ -47,6 +48,7 @@ public class PlayerMovement : MonoBehaviour
             moveAction = playerInput.actions["Move"];
             jumpAction = playerInput.actions["Jump"];
             escAction = playerInput.actions["Pause"];
+            readyAction = playerInput.actions["Ready"];
         }
         else
         {
@@ -65,6 +67,10 @@ public class PlayerMovement : MonoBehaviour
                 Debug.LogError("[PlayerMovement] Can't find the UIManager.");
             }
             else { UIManager.Instance.TogglePauseMenu(); }
+        }
+        if (readyAction.triggered && TheDirector.Instance.CurrentState == TheDirector.GameState.Shop)
+        {
+            TheDirector.Instance.SetGameState(TheDirector.GameState.Wave);
         }
 
 

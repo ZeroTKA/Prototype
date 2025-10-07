@@ -18,13 +18,12 @@ public class WaveManager : MonoBehaviour
     void Start()
     {
         if (TheDirector.Instance == null) { Debug.LogError("[WaveManager] TheDirector Instance not available"); }
-        else { TheDirector.Instance.OnGameStateChanged += Restart; }
-        StartCoroutine(SpawnWave(enemyPrefab, firstWaveEnemyCount, spawnInterval));
+        else { TheDirector.Instance.OnGameStateChanged += OnGameStateChange; }        
     }
     private void OnDisable()
     {
         if(TheDirector.Instance == null){ Debug.Log("[WaveManager] The Director is null. Can't unsub");}
-        else{ TheDirector.Instance.OnGameStateChanged -= Restart; }
+        else{ TheDirector.Instance.OnGameStateChanged -= OnGameStateChange; }
             
     }
 
@@ -52,7 +51,7 @@ public class WaveManager : MonoBehaviour
     }
 
     // -- TheDirector Methods -- // ???
-    private void Restart(TheDirector.GameState state)
+    private void OnGameStateChange(TheDirector.GameState state)
     {
         if (state == TheDirector.GameState.Restart)
         {
@@ -60,6 +59,10 @@ public class WaveManager : MonoBehaviour
             SyncCoordinator.Instance.RestartReady();
             Debug.Log("[WaveManager] Reastart Ready");
             // rest everything relating to the pool.
+        }
+        else if(state == TheDirector.GameState.Wave)
+        {
+            StartCoroutine(SpawnWave(enemyPrefab, firstWaveEnemyCount, spawnInterval));
         }
     }
 
