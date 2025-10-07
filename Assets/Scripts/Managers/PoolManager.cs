@@ -40,7 +40,7 @@ public class PoolManager : MonoBehaviour
     {
         // -- Subscribe -- //
         if (TheDirector.Instance == null) { Debug.LogError("[PoolManager] TheDirector Instance not available"); }
-        else { TheDirector.Instance.OnGameStateChanged += Restart; }            
+        else { TheDirector.Instance.OnGameStateChanged += OnGameStateChange; }            
 
         // -- preload -- //
         for (int i = 0; i < preloadEnemyPoolCount; i++)
@@ -52,7 +52,7 @@ public class PoolManager : MonoBehaviour
     private void OnDisable()
     {
         if (TheDirector.Instance == null) { Debug.Log("[PoolManager] The Director is null. Can't unsub"); }
-        else { TheDirector.Instance.OnGameStateChanged -= Restart; }
+        else { TheDirector.Instance.OnGameStateChanged -= OnGameStateChange; }
     }
 
     // -- Main Methods -- //
@@ -151,7 +151,7 @@ public class PoolManager : MonoBehaviour
     }
 
     // -- Supplemental Methods -- //
-    private void Restart(TheDirector.GameState state)
+    private void OnGameStateChange(TheDirector.GameState state)
     {
         // I really just want to reuse an existing method. This seemed the easiest way to grab everything quickly.
         // Later if I want to do this in batches or something, we have more control over WHEN the objects get disabled.

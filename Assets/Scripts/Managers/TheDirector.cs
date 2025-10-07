@@ -19,10 +19,10 @@ public class TheDirector : MonoBehaviour
     public enum GameState
     {
         MainMenu,
-        Wave,
         Shop,
-        GameOver,
-        Restart
+        Wave,
+        Restart,
+        GameOver
     }
 
 
@@ -36,7 +36,7 @@ public class TheDirector : MonoBehaviour
             Debug.LogError("[TheDirector] Player prefab is null. Can't paly the game can we? Nerd.");
         }
         SpawnPlayer();
-        SetGameState(GameState.Wave);
+        SetGameState(GameState.Shop);
     }
 
     // -- Main Methods -- //

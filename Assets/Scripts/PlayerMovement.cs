@@ -69,7 +69,7 @@ public class PlayerMovement : MonoBehaviour
 
 
         // -- Player Button Pushes -- //
-        if(TheDirector.Instance.CurrentState == TheDirector.GameState.Wave)
+        if(TheDirector.Instance.CurrentState == TheDirector.GameState.Wave || TheDirector.Instance.CurrentState == TheDirector.GameState.Shop)
         {
             Rotate();
             Movement();

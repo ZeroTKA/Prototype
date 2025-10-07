@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    // -- Debug -- //
+    [SerializeField] TextMeshProUGUI u_gameState;
+
     // -- Healthbar -- //
     [SerializeField] TextMeshProUGUI u_wallHealthSituation;
     [SerializeField] Image greemHealthBar;
@@ -29,12 +32,12 @@ public class UIManager : MonoBehaviour
     public void Start()
     {
         if (TheDirector.Instance == null) { Debug.LogError("[UIManager] TheDirector Instance not available"); }
-        else { TheDirector.Instance.OnGameStateChanged += Restart; }
+        else { TheDirector.Instance.OnGameStateChanged += OnGameStateChange; }
     }
     private void OnDisable()
     {
         if (TheDirector.Instance == null) { Debug.Log("[UIManager] The Director is null. Can't unsub"); }
-        else { TheDirector.Instance.OnGameStateChanged -= Restart; }
+        else { TheDirector.Instance.OnGameStateChanged -= OnGameStateChange; }
     }
 
     // -- Healthbar -- //
@@ -89,7 +92,7 @@ public class UIManager : MonoBehaviour
             Application.Quit();
 #endif
     }
-    private void Restart(TheDirector.GameState state)
+    private void OnGameStateChange(TheDirector.GameState state)
     {
         if (state == TheDirector.GameState.Restart)
         {
@@ -102,6 +105,7 @@ public class UIManager : MonoBehaviour
             StartCoroutine(RestartComplete(5.3f));
             // rest everything relating to the UI menu.
         }
+        u_gameState.text = "Game State = " + state.ToString();
     }
     public void TogglePauseMenu()
     {
