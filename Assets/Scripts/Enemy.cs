@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -11,6 +12,8 @@ public class Enemy : MonoBehaviour
     bool isAtWall = false;
 
     private readonly float moveSpeed = 4f;
+
+    public static event Action<Enemy> OnEnemyKilled;
 
     // -- Main Methods -- //
     public void Reset()
@@ -28,13 +31,19 @@ public class Enemy : MonoBehaviour
             Debug.LogError($"[Enemy] {damageAmount} is what's trying to damage this enemy. Damage must be positive");
         }
         else if (Health - damageAmount > 0) Health -= damageAmount;
+        // -- Death -- //
         else
         {
             if (PoolManager.Instance == null)
             {
                 Debug.LogError("[Enemy] PoolManager is null. Can't return object.");
             }
-            else { PoolManager.Instance.ReturnObjectToPool(gameObject); }
+            else 
+            {
+                OnEnemyKilled?.Invoke(this);
+                PoolManager.Instance.ReturnObjectToPool(gameObject); 
+            }
+            
         }
     }
 

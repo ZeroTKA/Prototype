@@ -4,8 +4,13 @@ using UnityEngine;
 public class WaveManager : MonoBehaviour
 {
     [SerializeField]GameObject enemyPrefab;
-    [SerializeField] int firstWaveEnemyCount;
+    [SerializeField] int numberOfEnemeis;
     [SerializeField] float spawnInterval;
+
+    // -- Tracking end of Wave things -- //
+    bool isSubscribedToEnemyEvent = false; // enemies push event when death occurs
+    int aliveEnemies = 0;
+    bool isFinishedSpawningEnemies = false;
 
     // -- Spawn area 1 -- //
     readonly float xMinRange = 1f;
@@ -13,7 +18,6 @@ public class WaveManager : MonoBehaviour
     readonly float zMinRange = -30f;
     readonly float zMaxRange = -25f;
 
-    int counter = 0;
     // -- Specialty Methods -- //
     void Start()
     {
@@ -24,7 +28,12 @@ public class WaveManager : MonoBehaviour
     {
         if(TheDirector.Instance == null){ Debug.Log("[WaveManager] The Director is null. Can't unsub");}
         else{ TheDirector.Instance.OnGameStateChanged -= OnGameStateChange; }
-            
+        if (isSubscribedToEnemyEvent)
+        {
+            Enemy.OnEnemyKilled -= CheckForEndOfWave;
+            isSubscribedToEnemyEvent = false;
+        }
+
     }
 
     // -- Wave Methods -- //
@@ -35,18 +44,36 @@ public class WaveManager : MonoBehaviour
 
         return new Vector3(x, 1, z);
     }
-    IEnumerator SpawnWave(GameObject prefab, int numberOfEnemies, float delayBetweenSpawns, float delayBeforeStartingWave = 0)
+    IEnumerator SpawnWave(GameObject prefab, int numberOfEnemiesToSpawn, float delayBetweenSpawns, float delayBeforeStartingWave = 0)
     {
-        if(prefab == null) { Debug.LogError("[WaveManager] Prefab is null when calling SpawnWave()"); yield break; }
 
+        if (prefab == null) { Debug.LogError("[WaveManager] Prefab is null when calling SpawnWave()"); yield break; }
+
+        // -- Check if Subscribed to Enemy Death event -- //
+        if(!isSubscribedToEnemyEvent) 
+        { 
+            Enemy.OnEnemyKilled += CheckForEndOfWave; 
+            isSubscribedToEnemyEvent = true; 
+            Debug.Log("[WaveManager] Subscribed to Enemy.OnEnemyKilled");
+        }
         // -- Spawning the prefab -- //
         if(delayBeforeStartingWave > 0) yield return new WaitForSeconds(delayBeforeStartingWave);
-        for (int i = 0; i < numberOfEnemies; i++)
+        for (int i = 0; i < numberOfEnemiesToSpawn; i++)
         {
-            yield return new WaitForSeconds(delayBetweenSpawns);
-            counter++;
+            yield return new WaitForSeconds(delayBetweenSpawns);            
             if (PoolManager.Instance == null) { Debug.LogError("[WaveManager] PoolManager is null when trying to SpawnWave()"); }
-            else { PoolManager.Instance.GetObjectFromPool(prefab, RandomPosition(), Quaternion.identity); }
+            else { PoolManager.Instance.GetObjectFromPool(prefab, RandomPosition(), Quaternion.identity); aliveEnemies++; }
+        }
+        isFinishedSpawningEnemies = true;
+        numberOfEnemeis += 8;
+    }
+    private void CheckForEndOfWave(Enemy enemy)
+    {
+        aliveEnemies--;
+        if (aliveEnemies == 0 && isFinishedSpawningEnemies)
+        {
+
+            TheDirector.Instance.SetGameState(TheDirector.GameState.Shop);
         }
     }
 
@@ -62,7 +89,9 @@ public class WaveManager : MonoBehaviour
         }
         else if(state == TheDirector.GameState.Wave)
         {
-            StartCoroutine(SpawnWave(enemyPrefab, firstWaveEnemyCount, spawnInterval));
+            isFinishedSpawningEnemies = false;
+            aliveEnemies = 0;
+            StartCoroutine(SpawnWave(enemyPrefab, numberOfEnemeis, spawnInterval));
         }
     }
 
