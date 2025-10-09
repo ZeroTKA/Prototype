@@ -102,7 +102,7 @@ public class PlayerShooting : MonoBehaviour
     }
     void Update()
     {
-        if(TheDirector.Instance.CurrentState == TheDirector.GameState.Wave)
+        if(TheDirector.Instance.CurrentState == TheDirector.GameState.Wave || TheDirector.Instance.CurrentState == TheDirector.GameState.Shop)
         {
             // -- Can We Shoot? -- //
             if (shootAction.triggered && !areWeReloading && canWeShoot)
@@ -116,9 +116,8 @@ public class PlayerShooting : MonoBehaviour
                     // play dud sound
                 }
             }
-
             // -- Can We Reload? -- //
-            if (reloadAction.triggered && CurrentAmmo < maxAmmo && !areWeReloading && SpareAmmo > 0)
+            if (reloadAction.triggered && CurrentAmmo < maxAmmo && SpareAmmo > 0 && !areWeReloading)
             {
                 Reload();
             }
