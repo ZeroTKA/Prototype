@@ -65,30 +65,6 @@ MonoBehaviour:
     - model: {fileID: 8926484042661618048}
       id: 0
       isStickyNote: 0
-    - model: {fileID: 8926484042661618066}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661618068}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661618070}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661618072}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661618074}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661618076}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661618084}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661618094}
-      id: 0
-      isStickyNote: 0
   stickyNoteInfos: []
   categories: []
   uiBounds:
@@ -5442,7 +5418,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEditor.VFX.Transform, Unity.VisualEffectGraph.Editor,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"position":{"x":6.717775821685791,"y":10.0,"z":-14.774066925048829},"angles":{"x":0.0,"y":0.0,"z":0.0},"scale":{"x":1.5,"y":0.0,"z":4.0}}'
+      m_SerializableObject: '{"position":{"x":6.717775821685791,"y":10.5,"z":-14.774066925048829},"angles":{"x":0.0,"y":0.0,"z":0.0},"scale":{"x":1.5,"y":0.0,"z":4.0}}'
     m_Space: 1
   m_Property:
     name: transform
