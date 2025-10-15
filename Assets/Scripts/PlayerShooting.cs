@@ -53,7 +53,7 @@ public class PlayerShooting : MonoBehaviour
     private bool areWeReloading = false;
     private bool canWeShoot = true;
     private readonly float shootSpeed = 1;
-    private readonly float reloadSpeed = 1;
+    private readonly float reloadSpeed = .5f;
 
     // -- Specialty Methods -- //
 
