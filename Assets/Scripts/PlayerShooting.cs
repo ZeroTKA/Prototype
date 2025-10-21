@@ -213,9 +213,9 @@ public class PlayerShooting : MonoBehaviour
     IEnumerator Reloading()
     {
         SoundManager.instance.PlaySound(SoundManager.SoundType.ReloadingBegin,gunTip.position);
-        yield return new WaitForSeconds(reloadSpeed / 2);
+        yield return new WaitForSeconds(reloadSpeed * .5f);
         SoundManager.instance.PlaySound(SoundManager.SoundType.ReloadingMid,gunTip.position);
-        yield return new WaitForSeconds(reloadSpeed / 2);
+        yield return new WaitForSeconds(reloadSpeed / 2 * .85f);
         SoundManager.instance.PlaySound(SoundManager.SoundType.ReloadingEnd,gunTip.position);
 
         // -- Reload Logic -- //

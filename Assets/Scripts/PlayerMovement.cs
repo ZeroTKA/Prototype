@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -21,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
     readonly float moveSpeed = 5f;
     Vector3 inputMove;
     bool isGrounded;
+    bool isStepSoundOn = false;
     private float stepDistanceForSound = 1;
     private Vector3 lastStepPosition;
 
@@ -91,10 +93,12 @@ public class PlayerMovement : MonoBehaviour
             if (isGrounded)
             {
                 float distanceMoved = Vector3.Distance(transform.position, lastStepPosition);
-                if (distanceMoved > stepDistanceForSound)
+                if (distanceMoved > stepDistanceForSound && !isStepSoundOn)
                 {
+                    isStepSoundOn = true;
                     SoundManager.instance.PlaySound(SoundManager.SoundType.Stone, transform.position);
                     lastStepPosition = transform.position; // reset last step so we can measure from the new position and not the old.)
+                    StartCoroutine(ResetSoundBool());
                 }
             }
         }
@@ -174,6 +178,11 @@ public class PlayerMovement : MonoBehaviour
             }
             SyncCoordinator.Instance.RestartReady();
         }
+    }
+    private IEnumerator ResetSoundBool()
+    {
+        yield return new WaitForSeconds(.5f);
+        isStepSoundOn = false;
     }
 
 }
