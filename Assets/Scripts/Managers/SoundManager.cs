@@ -8,6 +8,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioSource m_MusicSource;
 
     [SerializeField] AudioClip gunshots;
+    [SerializeField] GameObject m_GunshotPrefab;
     [SerializeField] AudioClip[] stoneWalking;
     [SerializeField] AudioClip[] gravelWalking;
     [SerializeField] AudioClip[] reloading;
@@ -29,7 +30,6 @@ public class SoundManager : MonoBehaviour
     private void Start()
     {
         CheckSounds();
-        m_MusicSource.PlayOneShot(rainLoop);
     }
 
     public void PlaySound(SoundType type, Vector3 position)
@@ -38,7 +38,7 @@ public class SoundManager : MonoBehaviour
         switch(type)
         {
             case SoundType.Gunshot:
-                clip = gunshots;
+                PoolManager.Instance.GetObjectFromPool(m_GunshotPrefab, position, Quaternion.identity);
                 break;
             case SoundType.ReloadingBegin:
                 clip = reloading[0];

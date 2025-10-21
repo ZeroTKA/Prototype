@@ -18,13 +18,18 @@ public class PoolManager : MonoBehaviour
     public static PoolManager Instance { get; private set; }
     [SerializeField] int preloadEnemyPoolCount;
     [SerializeField] Transform miscPool; // permanent transform.
+    Transform parentTransform; // recycled variable so we can set the parent transform to whatever pool it needs to be.
 
     // -- Specifically 'Enemy' Things -- //
     Stack<int> enemyIndexStack = new Stack<int>();
     List<GameObject> enemiesList = new List<GameObject>();
-    Transform parentTransform; // recycled variable so we can set the parent transform to whatever pool it needs to be.
     [SerializeField] Transform enemyParentPool;
     [SerializeField] GameObject preLoadEnemyPrefab; //preload transform.
+
+    // -- Specifically 'Gunshot' Things -- //
+    Stack<int> a_GunshotStack = new Stack<int>();
+    List<GameObject> a_GunshotList = new List<GameObject>();
+    [SerializeField] Transform a_GunshotParentPool;
     
     // -- Specialty Methods -- //
     private void Awake()
@@ -59,6 +64,39 @@ public class PoolManager : MonoBehaviour
 
     public void CreatePooledObject(GameObject prefab, Vector3 position, Quaternion rotation, bool activate = true)
     {
+        if (prefab.name.StartsWith("a_"))
+        {
+            // Bool activate is nice because it allows me to preload without making a separate method.
+            GameObject sound = Instantiate(prefab, position, rotation);
+
+            // -- Prep before pushing information about the enemy to places -- //
+            SetParentTransform(prefab.name); // figures out what pool to go to
+            a_GunshotList.Add(sound);
+            int soundIndex = a_GunshotList.Count - 1;
+
+            // -- Do all the things -- //
+            sound.transform.SetParent(parentTransform);
+            sound.SetActive(activate);
+            if (!activate) enemyIndexStack.Push(soundIndex); // meaning it's disabled then push index becaue it's available.
+
+            if (sound.TryGetComponent<Poolable>(out var soundPoolable))
+            {
+                // Validate index is in range
+                if (soundIndex < 0 || soundIndex >= a_GunshotList.Count)
+                {
+                    Debug.LogError($"[PoolManager] Invalid pool index {soundIndex} for {sound.name}");
+                }
+                else
+                {
+                    soundPoolable.PoolIndex = soundIndex;                   
+                }
+            }
+            else
+            {
+                Debug.LogError($"Enemy prefab missing Poolable component at index {soundIndex}");
+            }
+
+        }
         // Bool activate is nice because it allows me to preload without making a separate method.
         GameObject enemy = Instantiate(prefab, position, rotation);
 
@@ -94,26 +132,46 @@ public class PoolManager : MonoBehaviour
     }
     public void GetObjectFromPool(GameObject prefab, Vector3 position, Quaternion rotation)
     {
-        // -- if we can return, return -- //
-        if (enemyIndexStack.Count > 0)
-        {            
-            int index = enemyIndexStack.Pop();
-            GameObject enemy = enemiesList[index];
-            enemy.transform.SetPositionAndRotation(position, rotation);
-            enemy.SetActive(true);
-            if(enemy.TryGetComponent<Poolable>(out var poolable))
+        // -- Audio Prefabs -- //
+        if(prefab.name.StartsWith("a_"))
+        {
+            // -- if we can return, return -- //
+            if(a_GunshotStack.Count > 0)
             {
-                poolable.OnSpawn();
+                int index = a_GunshotStack.Pop();
+                GameObject gunshot = a_GunshotList[index];
+                gunshot.transform.SetPositionAndRotation(position, rotation);
+                gunshot.SetActive(true);
             }
-            else { Debug.LogError("[PoolManager] Trying to GetObjectFromPool but poolable doesn't exist"); }
+            else
+            {
+                CreatePooledObject(prefab, position, rotation);
+            }
+        }
+        // -- Enemy Prefabs -- //
+        else if(prefab.name.StartsWith("e_"))
+        {
+            // -- if we can return, return -- //
+            if (enemyIndexStack.Count > 0)
+            {
+                int index = enemyIndexStack.Pop();
+                GameObject enemy = enemiesList[index];
+                enemy.transform.SetPositionAndRotation(position, rotation);
+                enemy.SetActive(true);
+                if (enemy.TryGetComponent<Poolable>(out var poolable))
+                {
+                    poolable.OnSpawn();
+                }
+                else { Debug.LogError("[PoolManager] Trying to GetObjectFromPool but poolable doesn't exist"); }
+            }
+            // -- else we just create -- //
+            else
+            {
+                CreatePooledObject(prefab, position, rotation);
+            }
+        }
 
 
-        }
-        // -- else we just create -- //
-        else
-        {            
-            CreatePooledObject(prefab, position, rotation);
-        }
     }
     public void ReturnObjectToPool(GameObject obj)
     {
@@ -173,8 +231,11 @@ public class PoolManager : MonoBehaviour
         // trying to be scale-able and maybe there's a better way. Unsure.
         switch(name.ToLower())
         {
-            case "enemy":
+            case "e_enemy":
                 parentTransform = enemyParentPool;
+                break;
+            case "a_Gunshot":
+                parentTransform = a_GunshotParentPool;
                 break;
             default:
                 Debug.LogWarning($"{name.ToLower()} doesn't have a parent transform. Does it need it?");
