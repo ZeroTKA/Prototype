@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 public class PlayerShooting : MonoBehaviour
 {
     [SerializeField] Transform fpsCamera;
+    [SerializeField] Transform gunTip;
     private readonly int raycastDistance = 50;
 
 
@@ -159,6 +160,7 @@ public class PlayerShooting : MonoBehaviour
 
         // -- Clean up after shot -- //
         CurrentAmmo -= 1;
+        SoundManager.instance.PlaySound(SoundManager.SoundType.Gunshot, gunTip.transform.position);
         if (CurrentAmmo == 0) isMagazineEmpty = true;
         canWeShoot = false;
         StartCoroutine(ResetCanWeShootBool());
