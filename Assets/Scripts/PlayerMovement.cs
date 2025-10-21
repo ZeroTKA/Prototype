@@ -21,6 +21,8 @@ public class PlayerMovement : MonoBehaviour
     readonly float moveSpeed = 5f;
     Vector3 inputMove;
     bool isGrounded;
+    private float stepDistanceForSound = 1;
+    private Vector3 lastStepPosition;
 
     //-- Input Actions --//
     private InputAction lookAction;
@@ -55,6 +57,7 @@ public class PlayerMovement : MonoBehaviour
             Debug.LogError("[PlayerMovement] Unable to find PlayerInput.");
         }
         Cursor.lockState = CursorLockMode.Locked;
+        lastStepPosition = transform.position;
     }
 
     private void Update()
@@ -85,6 +88,15 @@ public class PlayerMovement : MonoBehaviour
                 Debug.LogError("[PlayerMovment] Can't find the UIManager in Update");
             }
             else { controller.Move((inputMove + velocity) * Time.deltaTime); }
+            if (isGrounded)
+            {
+                float distanceMoved = Vector3.Distance(transform.position, lastStepPosition);
+                if (distanceMoved > stepDistanceForSound)
+                {
+                    SoundManager.instance.PlaySound(SoundManager.SoundType.Stone, transform.position);
+                    lastStepPosition = transform.position; // reset last step so we can measure from the new position and not the old.)
+                }
+            }
         }
 
     }
