@@ -53,8 +53,8 @@ public class PlayerShooting : MonoBehaviour
     private bool isMagazineEmpty = false;
     private bool areWeReloading = false;
     private bool canWeShoot = true;
-    private readonly float shootSpeed = 1;
-    private readonly float reloadSpeed = .5f;
+    private readonly float shootSpeed = .67f;
+    private readonly float reloadSpeed = 1.5f;
 
     // -- Specialty Methods -- //
 
@@ -160,7 +160,7 @@ public class PlayerShooting : MonoBehaviour
 
         // -- Clean up after shot -- //
         CurrentAmmo -= 1;
-        SoundManager.instance.PlaySound(SoundManager.SoundType.Gunshot, gunTip.transform.position);
+        SoundManager.instance.PlaySound(SoundManager.SoundType.Gunshot, gunTip.position);
         if (CurrentAmmo == 0) isMagazineEmpty = true;
         canWeShoot = false;
         StartCoroutine(ResetCanWeShootBool());
@@ -212,7 +212,11 @@ public class PlayerShooting : MonoBehaviour
     }
     IEnumerator Reloading()
     {
-        yield return new WaitForSeconds(reloadSpeed);
+        SoundManager.instance.PlaySound(SoundManager.SoundType.ReloadingBegin,gunTip.position);
+        yield return new WaitForSeconds(reloadSpeed / 2);
+        SoundManager.instance.PlaySound(SoundManager.SoundType.ReloadingMid,gunTip.position);
+        yield return new WaitForSeconds(reloadSpeed / 2);
+        SoundManager.instance.PlaySound(SoundManager.SoundType.ReloadingEnd,gunTip.position);
 
         // -- Reload Logic -- //
         //If we have more than enough or exactly enough.
